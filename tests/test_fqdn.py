@@ -6,13 +6,13 @@ class TestFQDNValidation(TestCase):
 
     def test_constructor(self):
         with self.assertRaises(ValueError):
-            f = FQDN(None)
+            FQDN(None)
 
         with self.assertRaises(ValueError):
-            f = FQDN(b'')
+            FQDN(b'')
 
         with self.assertRaises(ValueError):
-            f = FQDN(b'helloworld')
+            FQDN(b'helloworld')
 
     def test_str(self):
         d = 'greatdomain.com'
@@ -75,6 +75,7 @@ class TestFQDNValidation(TestCase):
 
 
 class TestAbsoluteFQDN(TestCase):
+
     def test_absolute_fqdn(self):
         self.assertTrue(FQDN('trainwreck.com.').is_valid_absolute)
 
@@ -92,3 +93,9 @@ class TestAbsoluteFQDN(TestCase):
     def test_to_absolute_fqdn__raises_ValueError(self):
         with self.assertRaises(ValueError):
             FQDN('trainwreckcom').absolute
+
+    def test_relative_fqdn_true(self):
+        assert FQDN('relative.com').is_valid_relative is True
+
+    def test_relative_fqdn_false(self):
+        assert FQDN('relative.com.').is_valid_relative is False

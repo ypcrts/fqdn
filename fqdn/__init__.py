@@ -16,7 +16,7 @@ class FQDN:
     def __str__(self):
         return self.fqdn
 
-    @property 
+    @property
     def is_valid(self):
         return self.__is_valid
 
@@ -38,10 +38,18 @@ class FQDN:
     def is_valid_absolute(self) -> bool:
         """
         Validates a fully-qualified domain name (FQDN) is RFC preferred-form
-        compliant, and ends with a `.`. With non-absolute fqdns (relative, in
-        DNS lookups, the current hosts domain name will be appended.
+        compliant, and ends with a `.`. With relative FQDNS in DNS lookups,
+        the current hosts domain name or search domains may be appended.
         """
         return self.fqdn.endswith('.') and self.is_valid
+
+    @property
+    def is_valid_relative(self) -> bool:
+        """
+        Validates a fully-qualified domain name (FQDN) is RFC preferred-form
+        compliant, and does not ends with a `.`.
+        """
+        return not self.fqdn.endswith('.') and self.is_valid
 
     @property
     def absolute(self) -> str:
