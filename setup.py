@@ -13,9 +13,7 @@ setup(
     license='MPL 2.0',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: Implementation :: PyPy',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)',
         'Intended Audience :: System Administrators',
