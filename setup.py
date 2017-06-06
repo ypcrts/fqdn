@@ -9,7 +9,7 @@ setup(
     author='0x6768',
     author_email='0x6768@gmail.com',
     url='https://github.com/0x6768/fqdn',
-    keywords=['fqdn','domain','hostname'],
+    keywords=['fqdn', 'domain', 'hostname'],
     license='MPL 2.0',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
