@@ -1,0 +1,14 @@
+language: python
+python:
+  - 3.5
+  - 3.6
+  - pypy
+install:
+  - pip install .
+before_script:
+  - pip install --quiet flake8 coverage six python-coveralls
+  - flake8
+script: coverage run --branch --source fqdn -m py.test
+after_success:
+  - coverage report
+  - coveralls

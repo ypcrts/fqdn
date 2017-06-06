@@ -1,0 +1,8 @@
+/MANIFEST
+/dist
+/build
+/*.egg-info
+/.coverage
+/.tox
+/htmlcov/
+*,cover
