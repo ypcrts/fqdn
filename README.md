@@ -25,5 +25,8 @@ fqdn.is_valid_absolute
 
 fqdn.is_valid_relative
 # True
+
+fqdn.absolute
+# bbc.co.uk.
 ```
 
