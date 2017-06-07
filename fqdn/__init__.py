@@ -18,9 +18,6 @@ class FQDN:
 
     @property
     def is_valid(self):
-        return self.__is_valid
-
-    def __validate(self) -> bool:
         """
         Validates a fully-qualified domain name (FQDN), in full compliance with
         RFC 1035, and the "preferred form" specified in RFC 3686 s. 2.
@@ -30,6 +27,9 @@ class FQDN:
         https://tools.ietf.org/html/rfc3696#section-2
         https://tools.ietf.org/html/rfc1035
         """
+        return self.__is_valid
+
+    def __validate(self) -> bool:
         if len(self.fqdn) > 255:
             return False
         return bool(self.FQDN_REGEX.match(self.fqdn))
