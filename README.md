@@ -15,15 +15,15 @@ from fqdn import FQDN
 
 
 domain = 'bbc.co.uk'
-_fqdn = _fqdn(domain)
+fqdn = FQDN(domain)
 
-_fqdn.is_valid
+fqdn.is_valid
 # True
 
-_fqdn.is_valid_absolute
+fqdn.is_valid_absolute
 # False
 
-_fqdn.is_valid_relative
+fqdn.is_valid_relative
 # True
 ```
 
