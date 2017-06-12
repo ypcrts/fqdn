@@ -89,3 +89,13 @@ class FQDN:
             return self.fqdn
 
         return f'{self.fqdn}.'
+
+    @property
+    def relative(self) -> str:
+        if not self.is_valid:
+            raise ValueError(f'invalid FQDN `{self.fqdn}`')
+
+        if self.is_valid_absolute:
+            return self.fqdn[:-1]
+
+        return self.fqdn
