@@ -108,7 +108,7 @@ class TestAbsoluteFQDN(TestCase):
         assert FQDN('relative.com.').is_valid_relative is False
 
 
-def TestRelativeFQDN(TestCase):
+class TestRelativeFQDN(TestCase):
 
     def test_relative_fqdn_from_relative(self):
         self.assertEqual(FQDN('trainwreck.com').relative, 'trainwreck.com')
