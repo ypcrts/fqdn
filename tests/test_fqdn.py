@@ -21,20 +21,27 @@ class TestFQDNValidation(TestCase):
         assert d == str(FQDN(d))
 
     def test_rfc_1035_s_2_3_4__label_too_long(self):
+        self.__assert_invalid('b' * 63, 'com')
         self.__assert_invalid('A' * 64, 'com')
         self.__assert_invalid('b' * 63, 'A' * 64, 'com')
 
-    def test_rfc_1035_s_2_3_4__name_too_long_256_octets(self):
+    def test_rfc_1035_s_2_3_4__name_too_long_254_octets(self):
         parts = *[(chr(ord('A') + i % 26))
-                  for i in range(int(256 / 2) - 1)], 'co'
+                  for i in range(int(254 / 2) - 1)], 'co'
         fqdn = '.'.join(parts)
-        assert len(fqdn) == 256
+        assert len(fqdn) == 254
         self.__assert_invalid(fqdn)
 
-    def test_rfc_1035_s_2_3_4__name_ok_255_octets(self):
-        parts = [(chr(ord('A') + i % 26)) for i in range(int(256 / 2))]
+    def test_rfc_1035_s_2_3_4__name_ok_253_octets(self):
+        parts = [(chr(ord('A') + i % 26)) for i in range(int(254 / 2))]
         fqdn = '.'.join(parts)
-        assert len(fqdn) == 255
+        assert len(fqdn) == 253
+        self.__assert_valid(fqdn)
+
+    def test_rfc_1035_s_3_1__trailing_byte(self):
+        parts = [(chr(ord('A') + i % 26)) for i in range(int(254 / 2))]
+        fqdn = '.'.join(parts) + '.'
+        assert len(fqdn) == 254
         self.__assert_valid(fqdn)
 
     def test_rfc_3696_s_2__label_invalid_starts_or_ends_with_hyphen(self):
