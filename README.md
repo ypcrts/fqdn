@@ -1,8 +1,8 @@
 FQDN: Fully-Qualified Domain Name
 =================================
 
-[![Build Status](https://travis-ci.org/0x6768/fqdn.svg?branch=master)](https://travis-ci.org/0x6768/fqdn?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/0x6768/fqdn/badge.svg?branch=master)](https://coveralls.io/github/0x6768/fqdn?branch=master)
+[![Build Status](https://travis-ci.org/guyhughes/fqdn.svg?branch=master)](https://travis-ci.org/guyhughes/fqdn?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/guyhughes/fqdn/badge.svg?branch=master)](https://coveralls.io/github/guyhughes/fqdn?branch=master)
 [![Latest PyPi Version](https://img.shields.io/pypi/v/fqdn.svg)](https://pypi.python.org/pypi/fqdn)
 
 Validates a fully-qualified domain name (FQDN), in full compliance with
