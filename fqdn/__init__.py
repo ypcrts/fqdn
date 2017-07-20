@@ -26,7 +26,7 @@ class FQDN:
     FQDN_REGEX = re.compile('^((?!-)[-A-Z\d]{1,62}(?<!-)\.)+[A-Z]{1,62}\.?$',
                             re.IGNORECASE)
 
-    def __init__(self, fqdn: str):
+    def __init__(self, fqdn):
         try:
             assert fqdn and isinstance(fqdn, str)
         except:
@@ -50,7 +50,7 @@ class FQDN:
         """
         return self.__is_valid
 
-    def __validate(self) -> bool:
+    def __validate(self):
         """
         Iff the fqdn ends with a dot (in place of the RFC1035 trailing null
         byte), it may have a total length of 254 bytes, still it must be
@@ -64,7 +64,7 @@ class FQDN:
         return bool(self.FQDN_REGEX.match(self.fqdn))
 
     @property
-    def is_valid_absolute(self) -> bool:
+    def is_valid_absolute(self):
         """
         Validates a fully-qualified domain name (FQDN) is RFC preferred-form
         compliant, and ends with a `.`. With relative FQDNS in DNS lookups,
@@ -73,7 +73,7 @@ class FQDN:
         return self.fqdn.endswith('.') and self.is_valid
 
     @property
-    def is_valid_relative(self) -> bool:
+    def is_valid_relative(self):
         """
         Validates a fully-qualified domain name (FQDN) is RFC preferred-form
         compliant, and does not ends with a `.`.
@@ -81,19 +81,19 @@ class FQDN:
         return not self.fqdn.endswith('.') and self.is_valid
 
     @property
-    def absolute(self) -> str:
+    def absolute(self):
         if not self.is_valid:
-            raise ValueError(f'invalid FQDN `{self.fqdn}`')
+            raise ValueError('invalid FQDN `{0}`'.format(self.fqdn))
 
         if self.is_valid_absolute:
             return self.fqdn
 
-        return f'{self.fqdn}.'
+        return '{0}.'.format(self.fqdn)
 
     @property
-    def relative(self) -> str:
+    def relative(self):
         if not self.is_valid:
-            raise ValueError(f'invalid FQDN `{self.fqdn}`')
+            raise ValueError('invalid FQDN `{0}`'.format(self.fqdn))
 
         if self.is_valid_absolute:
             return self.fqdn[:-1]
