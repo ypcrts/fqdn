@@ -4,6 +4,7 @@
 /*.egg-info
 /.tox
 /htmlcov/
+/docs/_build/
 .coverage
 *,cover
 tests/__pycache__
