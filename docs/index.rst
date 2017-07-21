@@ -5,6 +5,8 @@ fqdn
 
 .. automodule:: fqdn
     :members:
+    :undoc-members:
+    :show-inheritance:
 
 .. .. toctree::
    .. :maxdepth: 2
