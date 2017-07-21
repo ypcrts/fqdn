@@ -11,6 +11,9 @@ setup(
     url='https://github.com/ypcrts/fqdn',
     keywords=['fqdn', 'domain', 'hostname'],
     license='MPL 2.0',
+    zip_safe=True,
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Programming Language :: Python :: 3.6',
