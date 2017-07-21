@@ -6,9 +6,9 @@ setup(
     description=('Validate fully-qualified domain names compliant '
                  'to RFC 1035 and the preferred form in RFC 3686 s. 2.'),
     install_requires=[],
-    author='0x6768',
+    author='Guy Hughes',
     author_email='ypcrts',
-    url='https://github.com/0x6768/fqdn',
+    url='https://github.com/ypcrts/fqdn',
     keywords=['fqdn', 'domain', 'hostname'],
     license='MPL 2.0',
     classifiers=[
