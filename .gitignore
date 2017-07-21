@@ -6,3 +6,6 @@
 /htmlcov/
 .coverage
 *,cover
+tests/__pycache__
+*.pyc
+.cache/
