@@ -1,3 +1,5 @@
+# coding=utf-8
+import sys
 from fqdn import FQDN
 from unittest import TestCase
 
@@ -8,11 +10,13 @@ class TestFQDNValidation(TestCase):
         with self.assertRaises(ValueError):
             FQDN(None)
 
-        with self.assertRaises(ValueError):
-            FQDN(b'')
+        # Python 3-specific tests
+        if sys.version_info >= (3, 0):
+            with self.assertRaises(ValueError):
+                FQDN(b'')
 
-        with self.assertRaises(ValueError):
-            FQDN(b'helloworld')
+            with self.assertRaises(ValueError):
+                FQDN(b'helloworld')
 
     def test_str(self):
         d = 'greatdomain.com'
@@ -26,8 +30,9 @@ class TestFQDNValidation(TestCase):
         self.__assert_invalid('b' * 63, 'A' * 64, 'com')
 
     def test_rfc_1035_s_2_3_4__name_too_long_254_octets(self):
-        parts = *[(chr(ord('A') + i % 26))
-                  for i in range(int(254 / 2) - 1)], 'co'
+        parts = [(chr(ord('A') + i % 26))
+                 for i in range(int(254 / 2) - 1)]
+        parts.append('co')
         fqdn = '.'.join(parts)
         assert len(fqdn) == 254
         self.__assert_invalid(fqdn)
