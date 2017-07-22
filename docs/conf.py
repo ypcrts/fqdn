@@ -167,6 +167,3 @@ texinfo_documents = [
      author, 'fqdn', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
