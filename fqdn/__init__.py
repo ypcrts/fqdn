@@ -1,5 +1,7 @@
 import re
 
+from cached_property import cached_property
+
 
 class FQDN:
     """
@@ -32,29 +34,23 @@ class FQDN:
         except:
             raise ValueError("fqdn must be str")
         self.fqdn = fqdn
-        self.__is_valid = self.__validate()
 
     def __str__(self):
         return self.fqdn
 
-    @property
+    @cached_property
     def is_valid(self):
         """
-        Validates a fully-qualified domain name (FQDN), in full compliance with
-        RFC 1035, and the "preferred form" specified in RFC 3686 s. 2.
-
-        Tolerates both relative and absolute FQDNs.
+        True for a validated fully-qualified domain nam (FQDN), in full
+        compliance with RFC 1035, and the "preferred form" specified in RFC
+        3686 s. 2, whether relative or absolute.
 
         https://tools.ietf.org/html/rfc3696#section-2
         https://tools.ietf.org/html/rfc1035
-        """
-        return self.__is_valid
 
-    def __validate(self):
-        """
-        Iff the fqdn ends with a dot (in place of the RFC1035 trailing null
-        byte), it may have a total length of 254 bytes, still it must be
-        less than 253 bytes.
+        If and only if the FQDN ends with a dot (in place of the RFC1035
+        trailing null byte), it may have a total length of 254 bytes, still it
+        must be less than 253 bytes.
         """
         length = len(self.fqdn)
         if self.fqdn.endswith('.'):
@@ -63,25 +59,30 @@ class FQDN:
             return False
         return bool(self.FQDN_REGEX.match(self.fqdn))
 
-    @property
+    @cached_property
     def is_valid_absolute(self):
         """
-        Validates a fully-qualified domain name (FQDN) is RFC preferred-form
-        compliant, and ends with a `.`. With relative FQDNS in DNS lookups,
-        the current hosts domain name or search domains may be appended.
+        True for a fully-qualified domain name (FQDN) that is RFC
+        preferred-form compliant and ends with a `.`.
+
+        With relative FQDNS in DNS lookups, the current hosts domain name or
+        search domains may be appended.
         """
         return self.fqdn.endswith('.') and self.is_valid
 
-    @property
+    @cached_property
     def is_valid_relative(self):
         """
-        Validates a fully-qualified domain name (FQDN) is RFC preferred-form
-        compliant, and does not ends with a `.`.
+        True for a validated fully-qualified domain name that compiles with the
+        RFC preferred-form and does not ends with a `.`.
         """
         return not self.fqdn.endswith('.') and self.is_valid
 
-    @property
+    @cached_property
     def absolute(self):
+        """
+        The FQDN as a string in absolute form
+        """
         if not self.is_valid:
             raise ValueError('invalid FQDN `{0}`'.format(self.fqdn))
 
@@ -90,8 +91,11 @@ class FQDN:
 
         return '{0}.'.format(self.fqdn)
 
-    @property
+    @cached_property
     def relative(self):
+        """
+        The FQDN as a string in relative form
+        """
         if not self.is_valid:
             raise ValueError('invalid FQDN `{0}`'.format(self.fqdn))
 
