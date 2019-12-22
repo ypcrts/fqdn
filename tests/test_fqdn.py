@@ -78,6 +78,7 @@ class TestFQDNValidation(TestCase):
         self.__assert_valid('who', 'is')
         self.__assert_valid('bbc', 'co', 'uk')
         self.__assert_valid('example', 'io')
+        self.__assert_valid('sh4d05-7357', 'c00-mm')
 
     def __assert_invalid(self, *seq):
         self.assertFalse(self.__is_valid_fqdn_from_labels_sequence(seq))

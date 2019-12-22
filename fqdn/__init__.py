@@ -25,7 +25,7 @@ class FQDN:
     without the trailing null byte or the leading length byte, and the max
     length of a label is 62 bytes without the leading length byte.
     """
-    FQDN_REGEX = re.compile(r'^((?!-)[-A-Z\d]{1,63}(?<!-)\.)+[A-Z]{1,63}\.?$',
+    FQDN_REGEX = re.compile(r'^((?!-)[-A-Z\d]{1,63}(?<!-)\.)+(?!-)[-A-Z\d]{1,63}(?<!-)\.?$',
                             re.IGNORECASE)
 
     def __init__(self, fqdn):
