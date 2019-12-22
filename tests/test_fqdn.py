@@ -13,11 +13,11 @@ class TestFQDNValidation(TestCase):
     # Python 3-specific tests
     if sys.version_info >= (3, 0):
         def test_constructor_raises_on_bytes(self):
-                with self.assertRaises(ValueError):
-                    FQDN(b'')
+            with self.assertRaises(ValueError):
+                FQDN(b'')
 
-                with self.assertRaises(ValueError):
-                    FQDN(b'helloworld')
+            with self.assertRaises(ValueError):
+                FQDN(b'helloworld')
 
     def test_str(self):
         d = 'greatdomain.com'

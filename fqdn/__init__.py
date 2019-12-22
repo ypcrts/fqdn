@@ -29,9 +29,7 @@ class FQDN:
                             re.IGNORECASE)
 
     def __init__(self, fqdn):
-        try:
-            assert fqdn and isinstance(fqdn, str)
-        except:
+        if not (fqdn and isinstance(fqdn, str)):
             raise ValueError("fqdn must be str")
         self.fqdn = fqdn
 
