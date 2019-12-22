@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name="fqdn",
     packages=["fqdn"],
-    version="1.1.1",
+    version="1.2.0",
     description=(
         "Validate fully-qualified domain names compliant "
         "to RFC 1035 and the preferred form in RFC 3686 s. 2."
