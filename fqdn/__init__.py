@@ -25,8 +25,10 @@ class FQDN:
     without the trailing null byte or the leading length byte, and the max
     length of a label is 62 bytes without the leading length byte.
     """
-    FQDN_REGEX = re.compile(r'^((?!-)[-A-Z\d]{1,63}(?<!-)\.)+(?!-)[-A-Z\d]{1,63}(?<!-)\.?$',
-                            re.IGNORECASE)
+
+    FQDN_REGEX = re.compile(
+        r"^((?!-)[-A-Z\d]{1,63}(?<!-)\.)+(?!-)[-A-Z\d]{1,63}(?<!-)\.?$", re.IGNORECASE
+    )
 
     def __init__(self, fqdn):
         if not (fqdn and isinstance(fqdn, str)):
@@ -51,7 +53,7 @@ class FQDN:
         must be less than 253 bytes.
         """
         length = len(self.fqdn)
-        if self.fqdn.endswith('.'):
+        if self.fqdn.endswith("."):
             length -= 1
         if length > 253:
             return False
@@ -66,7 +68,7 @@ class FQDN:
         With relative FQDNS in DNS lookups, the current hosts domain name or
         search domains may be appended.
         """
-        return self.fqdn.endswith('.') and self.is_valid
+        return self.fqdn.endswith(".") and self.is_valid
 
     @cached_property
     def is_valid_relative(self):
@@ -74,7 +76,7 @@ class FQDN:
         True for a validated fully-qualified domain name that compiles with the
         RFC preferred-form and does not ends with a `.`.
         """
-        return not self.fqdn.endswith('.') and self.is_valid
+        return not self.fqdn.endswith(".") and self.is_valid
 
     @cached_property
     def absolute(self):
@@ -82,12 +84,12 @@ class FQDN:
         The FQDN as a string in absolute form
         """
         if not self.is_valid:
-            raise ValueError('invalid FQDN `{0}`'.format(self.fqdn))
+            raise ValueError("invalid FQDN `{0}`".format(self.fqdn))
 
         if self.is_valid_absolute:
             return self.fqdn
 
-        return '{0}.'.format(self.fqdn)
+        return "{0}.".format(self.fqdn)
 
     @cached_property
     def relative(self):
@@ -95,7 +97,7 @@ class FQDN:
         The FQDN as a string in relative form
         """
         if not self.is_valid:
-            raise ValueError('invalid FQDN `{0}`'.format(self.fqdn))
+            raise ValueError("invalid FQDN `{0}`".format(self.fqdn))
 
         if self.is_valid_absolute:
             return self.fqdn[:-1]

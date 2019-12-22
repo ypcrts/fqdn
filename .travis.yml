@@ -7,8 +7,8 @@ python:
 install:
   - pip install .
 before_script:
-  - pip install --quiet flake8 coverage six python-coveralls
-  - flake8
+  - pip install --quiet black coverage six python-coveralls
+  - black --check .
 script: coverage run --branch --source fqdn -m py.test
 after_success:
   - coverage report
