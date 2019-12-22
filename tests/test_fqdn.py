@@ -27,6 +27,7 @@ class TestFQDNValidation(TestCase):
 
     def test_rfc_1035_s_2_3_4__label_max_length(self):
         self.__assert_valid('www.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.com')
+        self.__assert_valid('abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk')
 
     def test_rfc_1035_s_2_3_4__label_too_long(self):
         self.__assert_invalid('A' * 64, 'com')
