@@ -130,9 +130,10 @@ class TestRelativeFQDN(TestCase):
 
 class TestEquality(TestCase):
     def test_absolutes_are_equal(self):
-        self.assertTrue(FQDN("trainwreck.com."), FQDN("trainwreck.com."))
-    def test_relatives_are_equal(self):
-        self.assertTrue(FQDN("trainwreck.com"), FQDN("trainwreck.com"))
-    def test_mismatch_are_equal(self):
-        self.assertTrue(FQDN("trainwreck.com."), FQDN("trainwreck.com"))
+        self.assertEqual(FQDN("trainwreck.com."), FQDN("trainwreck.com."))
 
+    def test_relatives_are_equal(self):
+        self.assertEqual(FQDN("trainwreck.com"), FQDN("trainwreck.com"))
+
+    def test_mismatch_are_equal(self):
+        self.assertEqual(FQDN("trainwreck.com."), FQDN("trainwreck.com"))
