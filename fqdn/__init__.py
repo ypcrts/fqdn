@@ -103,3 +103,7 @@ class FQDN:
             return self.fqdn[:-1]
 
         return self.fqdn
+
+    def __eq__(self, other):
+        if isinstance(other, FQDN):
+            return self.absolute == other.absolute
