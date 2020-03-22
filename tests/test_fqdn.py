@@ -152,4 +152,7 @@ class TestEquality(TestCase):
         self.assertEqual(FQDN("trainwreck.com."), FQDN("trainwreck.com"))
 
     def test_equality_is_case_insensitive(self):
-        self.assertEqual(FQDN("all-letters-were-created-equal.com."), FQDN("ALL-LETTERS-WERE-CREATED-EQUAL.COM."))
+        self.assertEqual(
+            FQDN("all-letters-were-created-equal.com."),
+            FQDN("ALL-LETTERS-WERE-CREATED-EQUAL.COM."),
+        )
