@@ -23,7 +23,7 @@ class FQDN:
 
     Therefore the max length of a domain name is actually 253 ASCII bytes
     without the trailing null byte or the leading length byte, and the max
-    length of a label is 62 bytes without the leading length byte.
+    length of a label is 63 bytes without the leading length byte.
     """
 
     FQDN_REGEX = re.compile(
