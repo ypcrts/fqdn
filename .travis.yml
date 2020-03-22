@@ -4,11 +4,12 @@ python:
   - 3.5
   - 3.6
   - 3.7
+  - 3.8
 install:
   - pip install .
 before_script:
   - pip install --quiet coverage six python-coveralls
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.7 ]]; then pip install black && black --check .; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install black && black --check .; fi
 script: coverage run --branch --source fqdn -m py.test
 after_success:
   - coverage report
