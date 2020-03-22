@@ -150,3 +150,6 @@ class TestEquality(TestCase):
 
     def test_mismatch_are_equal(self):
         self.assertEqual(FQDN("trainwreck.com."), FQDN("trainwreck.com"))
+
+    def test_equality_is_case_insensitive(self):
+        self.assertEqual(FQDN("all-letters-were-created-equal.com."), FQDN("ALL-LETTERS-WERE-CREATED-EQUAL.COM."))

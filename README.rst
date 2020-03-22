@@ -12,21 +12,24 @@ Can also convert between absolute and relative FQDNs.
 
     from fqdn import FQDN
 
-
     domain = 'bbc.co.uk'
-    fqdn = FQDN(domain)
+    bbc_fqdn = FQDN(domain)
 
-    fqdn.is_valid
+    bbc_fqdn.is_valid
     # True
 
-    fqdn.is_valid_absolute
+    bbc_fqdn.is_valid_absolute
     # False
 
-    fqdn.is_valid_relative
+    bbc_fqdn.is_valid_relative
     # True
 
-    fqdn.absolute
+    bbc_fqdn.absolute
     # bbc.co.uk.
+
+    FQDN("bbc.co.uk") == FQDN("BBC.CO.UK.")
+    # True
+
 
 .. |Build Status| image:: https://travis-ci.org/ypcrts/fqdn.svg?branch=master
    :target: https://travis-ci.org/ypcrts/fqdn?branch=master
