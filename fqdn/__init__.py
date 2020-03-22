@@ -27,7 +27,8 @@ class FQDN:
     """
 
     FQDN_REGEX = re.compile(
-        r"^((?!-)[-A-Z\d]{1,63}(?<!-)\.)+(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$", re.IGNORECASE
+        r"^((?!-)[-A-Z\d]{1,63}(?<!-)\.)+(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$",
+        re.IGNORECASE,
     )
 
     def __init__(self, fqdn):
