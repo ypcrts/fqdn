@@ -36,6 +36,7 @@ class TestFQDNValidation(TestCase):
     def test_rfc_1035_s_2_3_4__label_too_long(self):
         self.__assert_invalid("A" * 64, "com")
         self.__assert_invalid("b" * 63, "A" * 64, "com")
+        self.__assert_invalid("com", "b" * 63, "A" * 64)
 
     def test_rfc_1035_s_2_3_4__name_too_long_254_octets(self):
         parts = [(chr(ord("A") + i % 26)) for i in range(int(254 / 2) - 1)]
@@ -78,6 +79,18 @@ class TestFQDNValidation(TestCase):
         self.__assert_valid("bbc", "co", "uk")
         self.__assert_valid("example", "io")
         self.__assert_valid("sh4d05-7357", "c00-mm")
+
+    def test_rfc_3696_s_2__tld_must_not_be_all_numeric(self):
+        self.__assert_invalid("www.1")
+        self.__assert_invalid("1.1")
+
+        self.__assert_invalid("111")
+        self.__assert_invalid("www.111")
+
+        self.__assert_valid("1.a1")
+
+        self.__assert_valid("1.1a")
+        self.__assert_valid("www.1a")
 
     def __assert_invalid(self, *seq):
         self.assertFalse(self.__is_valid_fqdn_from_labels_sequence(seq))
