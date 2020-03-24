@@ -107,4 +107,4 @@ class FQDN:
 
     def __eq__(self, other):
         if isinstance(other, FQDN):
-            return self.absolute == other.absolute
+            return self.absolute.lower() == other.absolute.lower()
