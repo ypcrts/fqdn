@@ -2,6 +2,8 @@ Fully-Qualified Domain Names
 ===================================
 |Build Status| |Coverage Status| |Latest PyPI Version|
 
+`PyPI Stats`_
+
 Validates a fully-qualified domain name (FQDN), in full compliance with
 `RFC 1035 <https://tools.ietf.org/html/rfc1035>`, and the "preferred form" 
 specified in `RFC 3696 section 2 <https://tools.ietf.org/html/rfc3696#section-2>`_.
@@ -37,3 +39,4 @@ Can also convert between absolute and relative FQDNs.
    :target: https://coveralls.io/github/ypcrts/fqdn?branch=master
 .. |Latest PyPI Version| image:: https://img.shields.io/pypi/v/fqdn.svg
    :target: https://pypi.python.org/pypi/fqdn
+.. _PyPI Stats: https://pypistats.org/packages/fqdn
