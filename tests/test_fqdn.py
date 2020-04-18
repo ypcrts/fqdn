@@ -156,3 +156,24 @@ class TestEquality(TestCase):
             FQDN("all-letters-were-created-equal.com."),
             FQDN("ALL-LETTERS-WERE-CREATED-EQUAL.COM."),
         )
+
+class TestHash(TestCase):
+    def test_is_hashable(self):
+        self.assertTrue(hash(FQDN("trainwreck.com.")))
+    def test_absolutes_are_equal(self):
+        self.assertEqual(hash(FQDN("trainwreck.com.")), hash(FQDN("trainwreck.com.")))
+
+    def test_relatives_are_equal(self):
+        self.assertEqual(hash(FQDN("trainwreck.com")), hash(FQDN("trainwreck.com")))
+
+    def test_mismatch_are_equal(self):
+        self.assertEqual(hash(FQDN("trainwreck.com.")), hash(FQDN("trainwreck.com")))
+
+    def test_equality_is_case_insensitive(self):
+        self.assertEqual(
+            hash(FQDN("all-letters-were-created-equal.com.")),
+            hash(FQDN("ALL-LETTERS-WERE-CREATED-EQUAL.COM.")),
+        )
+
+    def test_not_equal_to_string(self):
+        self.assertNotEqual(hash(FQDN("trainwreck.com.")), hash("trainwreck.com."))

@@ -114,4 +114,4 @@ class FQDN:
             return self.absolute.lower() == other.absolute.lower()
 
     def __hash__(self):
-        return hash(self.absolute)
+        return hash(self.absolute.lower()) + hash("fqdn")
