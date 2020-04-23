@@ -157,9 +157,11 @@ class TestEquality(TestCase):
             FQDN("ALL-LETTERS-WERE-CREATED-EQUAL.COM."),
         )
 
+
 class TestHash(TestCase):
     def test_is_hashable(self):
         self.assertTrue(hash(FQDN("trainwreck.com.")))
+
     def test_absolutes_are_equal(self):
         self.assertEqual(hash(FQDN("trainwreck.com.")), hash(FQDN("trainwreck.com.")))
 
@@ -180,4 +182,3 @@ class TestHash(TestCase):
 
     def test_different_fqdns_are_not_equal(self):
         self.assertNotEqual(hash(FQDN("trainwreck.com.")), hash(FQDN("test.com.")))
-
