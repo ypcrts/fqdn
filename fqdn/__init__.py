@@ -34,10 +34,10 @@ class FQDN:
     def __init__(self, fqdn):
         if not (fqdn and isinstance(fqdn, str)):
             raise ValueError("fqdn must be str")
-        self.fqdn = fqdn
+        self._fqdn = fqdn
 
     def __str__(self):
-        return self.fqdn
+        return self._fqdn
 
     @cached_property
     def is_valid(self):
@@ -53,12 +53,12 @@ class FQDN:
         trailing null byte), it may have a total length of 254 bytes, still it
         must be less than 253 bytes.
         """
-        length = len(self.fqdn)
-        if self.fqdn.endswith("."):
+        length = len(self._fqdn)
+        if self._fqdn.endswith("."):
             length -= 1
         if length > 253:
             return False
-        return bool(self.FQDN_REGEX.match(self.fqdn))
+        return bool(self.FQDN_REGEX.match(self._fqdn))
 
     @cached_property
     def is_valid_absolute(self):
@@ -69,7 +69,7 @@ class FQDN:
         With relative FQDNS in DNS lookups, the current hosts domain name or
         search domains may be appended.
         """
-        return self.fqdn.endswith(".") and self.is_valid
+        return self._fqdn.endswith(".") and self.is_valid
 
     @cached_property
     def is_valid_relative(self):
@@ -77,7 +77,7 @@ class FQDN:
         True for a validated fully-qualified domain name that compiles with the
         RFC preferred-form and does not ends with a `.`.
         """
-        return not self.fqdn.endswith(".") and self.is_valid
+        return not self._fqdn.endswith(".") and self.is_valid
 
     @cached_property
     def absolute(self):
@@ -85,12 +85,12 @@ class FQDN:
         The FQDN as a string in absolute form
         """
         if not self.is_valid:
-            raise ValueError("invalid FQDN `{0}`".format(self.fqdn))
+            raise ValueError("invalid FQDN `{0}`".format(self._fqdn))
 
         if self.is_valid_absolute:
-            return self.fqdn
+            return self._fqdn
 
-        return "{0}.".format(self.fqdn)
+        return "{0}.".format(self._fqdn)
 
     @cached_property
     def relative(self):
@@ -98,13 +98,16 @@ class FQDN:
         The FQDN as a string in relative form
         """
         if not self.is_valid:
-            raise ValueError("invalid FQDN `{0}`".format(self.fqdn))
+            raise ValueError("invalid FQDN `{0}`".format(self._fqdn))
 
         if self.is_valid_absolute:
-            return self.fqdn[:-1]
+            return self._fqdn[:-1]
 
-        return self.fqdn
+        return self._fqdn
 
     def __eq__(self, other):
         if isinstance(other, FQDN):
             return self.absolute.lower() == other.absolute.lower()
+
+    def __hash__(self):
+        return hash(self.absolute.lower()) + hash("fqdn")
