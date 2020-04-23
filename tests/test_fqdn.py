@@ -177,3 +177,7 @@ class TestHash(TestCase):
 
     def test_not_equal_to_string(self):
         self.assertNotEqual(hash(FQDN("trainwreck.com.")), hash("trainwreck.com."))
+
+    def test_different_fqdns_are_not_equal(self):
+        self.assertNotEqual(hash(FQDN("trainwreck.com.")), hash(FQDN("test.com.")))
+

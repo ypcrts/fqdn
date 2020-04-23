@@ -39,10 +39,6 @@ class FQDN:
     def __str__(self):
         return self._fqdn
 
-    @property
-    def fqdn(self):
-        return self._fqdn
-
     @cached_property
     def is_valid(self):
         """
