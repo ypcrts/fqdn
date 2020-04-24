@@ -1,7 +1,6 @@
 import re
 
-from cached_property import cached_property
-
+from fqdn._compat import cached_property
 
 class FQDN:
     """
