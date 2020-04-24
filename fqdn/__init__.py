@@ -2,6 +2,7 @@ import re
 
 from fqdn._compat import cached_property
 
+
 class FQDN:
     """
     From https://tools.ietf.org/html/rfc1035#page-9,  RFC 1035 3.1. Name space
