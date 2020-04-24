@@ -21,7 +21,7 @@ class TestFQDNValidation(TestCase):
 
     def test_str(self):
         d = "greatdomain.com"
-        assert d == str(FQDN(d))
+        assert d + "." == str(FQDN(d))
         d += "."
         assert d == str(FQDN(d))
 
