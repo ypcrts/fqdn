@@ -37,7 +37,7 @@ class FQDN:
         self._fqdn = fqdn.lower()
 
     def __str__(self):
-        return self.absolute
+        return self.relative
 
     @cached_property
     def is_valid(self):

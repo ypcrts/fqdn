@@ -1,6 +1,5 @@
 import sys
 
-print(sys.version_info[:2])
 if sys.version_info[:2] >= (3, 8):
     from functools import cached_property
 else:
