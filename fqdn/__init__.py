@@ -1,6 +1,6 @@
 import re
 
-from cached_property import cached_property
+from fqdn._compat import cached_property
 
 
 class FQDN:
@@ -34,10 +34,10 @@ class FQDN:
     def __init__(self, fqdn):
         if not (fqdn and isinstance(fqdn, str)):
             raise ValueError("fqdn must be str")
-        self._fqdn = fqdn
+        self._fqdn = fqdn.lower()
 
     def __str__(self):
-        return self._fqdn
+        return self.relative
 
     @cached_property
     def is_valid(self):
@@ -107,7 +107,7 @@ class FQDN:
 
     def __eq__(self, other):
         if isinstance(other, FQDN):
-            return self.absolute.lower() == other.absolute.lower()
+            return self.absolute == other.absolute
 
     def __hash__(self):
-        return hash(self.absolute.lower()) + hash("fqdn")
+        return hash(self.absolute) + hash("fqdn")

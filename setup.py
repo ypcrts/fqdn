@@ -14,7 +14,7 @@ setup(
     keywords=["fqdn", "domain", "hostname", "RFC3686", "dns"],
     license="MPL 2.0",
     zip_safe=True,
-    install_requires=["cached-property>=1.3.0"],
+    install_requires=["cached-property>=1.3.0;python_version<'3.8'"],
     test_suite="tests",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
