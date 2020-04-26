@@ -1,8 +1,6 @@
 Fully-Qualified Domain Names
 ===================================
-|Build Status| |Coverage Status| |Latest PyPI Version|
-
-`PyPI Stats`_
+|Build Status| |Coverage Status| |Latest PyPI Version| |Downloads| |Monthly Downloads|
 
 Validates a fully-qualified domain name (FQDN), in full compliance with
 `RFC 1035 <https://tools.ietf.org/html/rfc1035>`, and the "preferred form" 
@@ -33,10 +31,15 @@ Can also convert between absolute and relative FQDNs.
     # True
 
 
+.. |Python Versions| image:: https://img.shields.io/pypi/pyversions/fqdn.svg
+   :target: https://pypi.org/project/fqdn/
 .. |Build Status| image:: https://travis-ci.org/ypcrts/fqdn.svg?branch=master
    :target: https://travis-ci.org/ypcrts/fqdn?branch=master
 .. |Coverage Status| image:: https://coveralls.io/repos/github/ypcrts/fqdn/badge.svg?branch=master
    :target: https://coveralls.io/github/ypcrts/fqdn?branch=master
 .. |Latest PyPI Version| image:: https://img.shields.io/pypi/v/fqdn.svg
    :target: https://pypi.python.org/pypi/fqdn
-.. _PyPI Stats: https://pypistats.org/packages/fqdn
+.. |Downloads| image:: https://pepy.tech/badge/fqdn
+   :target: https://pepy.tech/project/fqdn
+.. |Monthly Downloads| image:: https://pepy.tech/badge/fqdn/month
+   :target: https://pepy.tech/project/fqdn/month
