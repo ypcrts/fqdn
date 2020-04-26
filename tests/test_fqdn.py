@@ -21,8 +21,8 @@ class TestFQDNValidation(TestCase):
 
     def test_str(self):
         d = "greatdomain.com"
-        assert d == str(FQDN(d))
-        assert d == str(FQDN(d + "."))
+        f = FQDN(d)
+        assert f.absolute == str(f)
 
     def test_rfc_1035_s_2_3_4__label_max_length(self):
         self.__assert_valid(
