@@ -31,11 +31,11 @@ class FQDN:
         re.IGNORECASE,
     )
     LOOSE_FQDN_REGEX = re.compile(
-        r"^((?![_-])[-_A-Z\d]{1,63}(?<![_-])\.)+(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$",
+        r"^((?![-_])[-_A-Z\d]{1,63}(?<!-)\.)*((?!-)[-A-Z\d]{1,63}(?<!-)\.)(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$",
         re.IGNORECASE,
     )
 
-    def __init__(self, fqdn, strict = True):
+    def __init__(self, fqdn, strict=True):
         if not (fqdn and isinstance(fqdn, str)):
             raise ValueError("fqdn must be str")
         self._fqdn = fqdn.lower()
