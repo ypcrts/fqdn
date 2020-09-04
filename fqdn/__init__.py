@@ -26,15 +26,23 @@ class FQDN:
     length of a label is 63 bytes without the leading length byte.
     """
 
-    FQDN_REGEX = re.compile(
+    STRICT_FQDN_REGEX = re.compile(
         r"^((?!-)[-A-Z\d]{1,63}(?<!-)\.)+(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$",
         re.IGNORECASE,
     )
+    LOOSE_FQDN_REGEX = re.compile(
+        r"^((?![_-])[-_A-Z\d]{1,63}(?<![_-])\.)+(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$",
+        re.IGNORECASE,
+    )
 
-    def __init__(self, fqdn):
+    def __init__(self, fqdn, strict = True):
         if not (fqdn and isinstance(fqdn, str)):
             raise ValueError("fqdn must be str")
         self._fqdn = fqdn.lower()
+        if strict:
+            self.regex = self.STRICT_FQDN_REGEX
+        else:
+            self.regex = self.LOOSE_FQDN_REGEX
 
     def __str__(self):
         """
@@ -61,7 +69,7 @@ class FQDN:
             length -= 1
         if length > 253:
             return False
-        return bool(self.FQDN_REGEX.match(self._fqdn))
+        return bool(self.regex.match(self._fqdn))
 
     @cached_property
     def is_valid_absolute(self):

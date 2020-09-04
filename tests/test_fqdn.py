@@ -1,27 +1,36 @@
 # coding=utf-8
 import sys
+
+import pytest
+
 from fqdn import FQDN
 from unittest import TestCase
 
+def build_fqdn(domain, strict = True):
+    return FQDN(domain, strict)
 
-class TestFQDNValidation(TestCase):
-    def test_constructor(self):
+@pytest.fixture(params=(True, False))
+def strict(request):
+    return request.param
+
+class TestFQDNValidation:
+    def test_constructor(self, strict):
         with self.assertRaises(ValueError):
-            FQDN(None)
+            build_fqdn(None, strict)
 
     # Python 3-specific tests
     if sys.version_info >= (3, 0):
 
-        def test_constructor_raises_on_bytes(self):
+        def test_constructor_raises_on_bytes(self, strict):
             with self.assertRaises(ValueError):
-                FQDN(b"")
+                build_fqdn(b"", strict)
 
             with self.assertRaises(ValueError):
-                FQDN(b"helloworld")
+                build_fqdn(b"helloworld", strict)
 
     def test_str(self):
         d = "greatdomain.com"
-        f = FQDN(d)
+        f = build_fqdn(d, strict)
         assert f.absolute == str(f)
 
     def test_rfc_1035_s_2_3_4__label_max_length(self):
@@ -99,85 +108,85 @@ class TestFQDNValidation(TestCase):
 
     def __is_valid_fqdn_from_labels_sequence(self, fqdn_labels_sequence):
         fqdn = ".".join(fqdn_labels_sequence)
-        return FQDN(fqdn).is_valid
+        return build_fqdn(fqdn, strict).is_valid
 
 
 class TestAbsoluteFQDN(TestCase):
     def test_absolute_fqdn(self):
-        self.assertTrue(FQDN("trainwreck.com.").is_valid_absolute)
+        self.assertTrue(build_fqdn("trainwreck.com.").is_valid_absolute, strict)
 
     def test_absolute_fqdn__fail(self):
-        self.assertFalse(FQDN("trainwreck.com").is_valid_absolute)
+        self.assertFalse(build_fqdn("trainwreck.com").is_valid_absolute, strict)
 
     def test_to_absolute_fqdn_from_relative(self):
-        self.assertEqual(FQDN("trainwreck.com").absolute, "trainwreck.com.")
+        self.assertEqual(build_fqdn("trainwreck.com").absolute, "trainwreck.com.", strict)
 
     def test_to_absolute_fqdn_from_absolute(self):
         self.assertEqual(
-            FQDN("absolutetrainwreck.com.").absolute, "absolutetrainwreck.com."
+            build_fqdn("absolutetrainwreck.com.", strict).absolute, "absolutetrainwreck.com."
         )
 
     def test_to_absolute_fqdn__raises_ValueError(self):
         with self.assertRaises(ValueError):
-            FQDN("trainwreckcom").absolute
+            build_fqdn("trainwreckcom", strict).absolute
 
     def test_relative_fqdn_true(self):
-        assert FQDN("relative.com").is_valid_relative is True
+        assert build_fqdn("relative.com", strict).is_valid_relative is True
 
     def test_relative_fqdn_false(self):
-        assert FQDN("relative.com.").is_valid_relative is False
+        assert build_fqdn("relative.com.", strict).is_valid_relative is False
 
 
 class TestRelativeFQDN(TestCase):
     def test_relative_fqdn_from_relative(self):
-        self.assertEqual(FQDN("trainwreck.com").relative, "trainwreck.com")
+        self.assertEqual(build_fqdn("trainwreck.com").relative, "trainwreck.com", strict)
 
     def test_relative_fqdn_from_absolute(self):
-        self.assertEqual(FQDN("trainwreck.com.").relative, "trainwreck.com")
+        self.assertEqual(build_fqdn("trainwreck.com.").relative, "trainwreck.com", strict)
 
     def test_relative_fqdn_from_invalid(self):
         with self.assertRaises(ValueError):
-            FQDN("trainwreck..").relative
+            build_fqdn("trainwreck..", strict).relative
 
 
 class TestEquality(TestCase):
     def test_absolutes_are_equal(self):
-        self.assertEqual(FQDN("trainwreck.com."), FQDN("trainwreck.com."))
+        self.assertEqual(build_fqdn("trainwreck.com."), FQDN("trainwreck.com."), strict)
 
     def test_relatives_are_equal(self):
-        self.assertEqual(FQDN("trainwreck.com"), FQDN("trainwreck.com"))
+        self.assertEqual(build_fqdn("trainwreck.com"), FQDN("trainwreck.com"), strict)
 
     def test_mismatch_are_equal(self):
-        self.assertEqual(FQDN("trainwreck.com."), FQDN("trainwreck.com"))
+        self.assertEqual(build_fqdn("trainwreck.com."), FQDN("trainwreck.com"), strict)
 
     def test_equality_is_case_insensitive(self):
         self.assertEqual(
-            FQDN("all-letters-were-created-equal.com."),
-            FQDN("ALL-LETTERS-WERE-CREATED-EQUAL.COM."),
+            build_fqdn("all-letters-were-created-equal.com.", strict),
+            build_fqdn("ALL-LETTERS-WERE-CREATED-EQUAL.COM.", strict),
         )
 
 
 class TestHash(TestCase):
     def test_is_hashable(self):
-        self.assertTrue(hash(FQDN("trainwreck.com.")))
+        self.assertTrue(hash(build_fqdn("trainwreck.com.")), strict)
 
     def test_absolutes_are_equal(self):
-        self.assertEqual(hash(FQDN("trainwreck.com.")), hash(FQDN("trainwreck.com.")))
+        self.assertEqual(hash(build_fqdn("trainwreck.com.")), hash(FQDN("trainwreck.com.")), strict)
 
     def test_relatives_are_equal(self):
-        self.assertEqual(hash(FQDN("trainwreck.com")), hash(FQDN("trainwreck.com")))
+        self.assertEqual(hash(build_fqdn("trainwreck.com")), hash(FQDN("trainwreck.com")), strict)
 
     def test_mismatch_are_equal(self):
-        self.assertEqual(hash(FQDN("trainwreck.com.")), hash(FQDN("trainwreck.com")))
+        self.assertEqual(hash(build_fqdn("trainwreck.com.")), hash(FQDN("trainwreck.com")), strict)
 
     def test_equality_is_case_insensitive(self):
         self.assertEqual(
-            hash(FQDN("all-letters-were-created-equal.com.")),
-            hash(FQDN("ALL-LETTERS-WERE-CREATED-EQUAL.COM.")),
+            hash(build_fqdn("all-letters-were-created-equal.com."), strict),
+            hash(build_fqdn("ALL-LETTERS-WERE-CREATED-EQUAL.COM."), strict),
         )
 
     def test_not_equal_to_string(self):
-        self.assertNotEqual(hash(FQDN("trainwreck.com.")), hash("trainwreck.com."))
+        self.assertNotEqual(hash(build_fqdn("trainwreck.com.")), hash("trainwreck.com."), strict)
 
     def test_different_fqdns_are_not_equal(self):
-        self.assertNotEqual(hash(FQDN("trainwreck.com.")), hash(FQDN("test.com.")))
+        self.assertNotEqual(hash(build_fqdn("trainwreck.com.")), hash(FQDN("test.com.")), strict)
