@@ -15,178 +15,170 @@ def strict(request):
 
 class TestFQDNValidation:
     def test_constructor(self, strict):
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             build_fqdn(None, strict)
 
     # Python 3-specific tests
     if sys.version_info >= (3, 0):
 
         def test_constructor_raises_on_bytes(self, strict):
-            with self.assertRaises(ValueError):
+            with pytest.raises(ValueError):
                 build_fqdn(b"", strict)
 
-            with self.assertRaises(ValueError):
+            with pytest.raises(ValueError):
                 build_fqdn(b"helloworld", strict)
 
-    def test_str(self):
+    def test_str(self, strict):
         d = "greatdomain.com"
         f = build_fqdn(d, strict)
         assert f.absolute == str(f)
 
-    def test_rfc_1035_s_2_3_4__label_max_length(self):
+    def test_rfc_1035_s_2_3_4__label_max_length(self, strict):
         self.__assert_valid(
-            "www.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.com"
+            "www.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.com", strict=strict
         )
         self.__assert_valid(
-            "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk"
+            "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk", strict=strict
         )
 
-    def test_rfc_1035_s_2_3_4__label_too_long(self):
-        self.__assert_invalid("A" * 64, "com")
-        self.__assert_invalid("b" * 63, "A" * 64, "com")
-        self.__assert_invalid("com", "b" * 63, "A" * 64)
+    def test_rfc_1035_s_2_3_4__label_too_long(self, strict):
+        self.__assert_invalid("A" * 64, "com", strict=strict)
+        self.__assert_invalid("b" * 63, "A" * 64, "com", strict=strict)
+        self.__assert_invalid("com", "b" * 63, "A" * 64, strict=strict)
 
-    def test_rfc_1035_s_2_3_4__name_too_long_254_octets(self):
+    def test_rfc_1035_s_2_3_4__name_too_long_254_octets(self, strict):
         parts = [(chr(ord("A") + i % 26)) for i in range(int(254 / 2) - 1)]
         parts.append("co")
         fqdn = ".".join(parts)
         assert len(fqdn) == 254
-        self.__assert_invalid(fqdn)
+        self.__assert_invalid(fqdn, strict=strict)
 
-    def test_rfc_1035_s_2_3_4__name_ok_253_octets(self):
+    def test_rfc_1035_s_2_3_4__name_ok_253_octets(self, strict):
         parts = [(chr(ord("A") + i % 26)) for i in range(int(254 / 2))]
         fqdn = ".".join(parts)
         assert len(fqdn) == 253
-        self.__assert_valid(fqdn)
+        self.__assert_valid(fqdn, strict=strict)
 
-    def test_rfc_1035_s_3_1__trailing_byte(self):
+    def test_rfc_1035_s_3_1__trailing_byte(self, strict):
         parts = [(chr(ord("A") + i % 26)) for i in range(int(254 / 2))]
         fqdn = ".".join(parts) + "."
         assert len(fqdn) == 254
-        self.__assert_valid(fqdn)
+        self.__assert_valid(fqdn, strict=strict)
 
-    def test_rfc_3696_s_2__label_invalid_starts_or_ends_with_hyphen(self):
-        self.__assert_invalid("-a", "com")
-        self.__assert_invalid("a-", "com")
-        self.__assert_invalid("-a-", "com")
-        self.__assert_invalid("a", "-com")
-        self.__assert_invalid("a", "com-")
+    def test_rfc_3696_s_2__label_invalid_starts_or_ends_with_hyphen(self, strict):
+        self.__assert_invalid("-a", "com", strict=strict)
+        self.__assert_invalid("a-", "com", strict=strict)
+        self.__assert_invalid("-a-", "com", strict=strict)
+        self.__assert_invalid("a", "-com", strict=strict)
+        self.__assert_invalid("a", "com-", strict=strict)
 
-    def test_rfc_3696_s_2__preferred_form_invalid_chars(self):
+    def test_rfc_3696_s_2__preferred_form_invalid_chars(self, strict):
         # these should use punycode instead
-        self.__assert_invalid("є", "com")
-        self.__assert_invalid("le-tour-est-joué", "com")
-        self.__assert_invalid("invalid", "cóm")
-        self.__assert_invalid("ich-hätte-gern-ein-Umlaut", "de")
-        self.__assert_invalid("\x01", "com")
-        self.__assert_invalid("x", "\x01\x02\x01")
+        self.__assert_invalid("є", "com", strict=strict)
+        self.__assert_invalid("le-tour-est-joué", "com", strict=strict)
+        self.__assert_invalid("invalid", "cóm", strict=strict)
+        self.__assert_invalid("ich-hätte-gern-ein-Umlaut", "de", strict=strict)
+        self.__assert_invalid("\x01", "com", strict=strict)
+        self.__assert_invalid("x", "\x01\x02\x01", strict=strict)
 
-    def test_rfc_3696_s_2__valid(self):
-        self.__assert_valid("shopping", "on", "the" "net")
-        self.__assert_valid("who", "is")
-        self.__assert_valid("bbc", "co", "uk")
-        self.__assert_valid("example", "io")
-        self.__assert_valid("sh4d05-7357", "c00-mm")
+    def test_rfc_3696_s_2__valid(self, strict):
+        self.__assert_valid("shopping", "on", "the" "net", strict=strict)
+        self.__assert_valid("who", "is", strict=strict)
+        self.__assert_valid("bbc", "co", "uk", strict=strict)
+        self.__assert_valid("example", "io", strict=strict)
+        self.__assert_valid("sh4d05-7357", "c00-mm", strict=strict)
 
-    def test_rfc_3696_s_2__tld_must_not_be_all_numeric(self):
-        self.__assert_invalid("www.1")
-        self.__assert_invalid("1.1")
+    def test_rfc_3696_s_2__tld_must_not_be_all_numeric(self, strict):
+        self.__assert_invalid("www.1", strict=strict)
+        self.__assert_invalid("1.1", strict=strict)
 
-        self.__assert_invalid("111")
-        self.__assert_invalid("www.111")
+        self.__assert_invalid("111", strict=strict)
+        self.__assert_invalid("www.111", strict=strict)
 
-        self.__assert_valid("1.a1")
+        self.__assert_valid("1.a1", strict=strict)
 
-        self.__assert_valid("1.1a")
-        self.__assert_valid("www.1a")
+        self.__assert_valid("1.1a", strict=strict)
+        self.__assert_valid("www.1a", strict=strict)
 
-    def __assert_invalid(self, *seq):
-        self.assertFalse(self.__is_valid_fqdn_from_labels_sequence(seq))
+    def __assert_invalid(self, *seq, strict):
+        assert self.__is_valid_fqdn_from_labels_sequence(seq, strict=strict) is False
 
-    def __assert_valid(self, *seq):
-        self.assertTrue(self.__is_valid_fqdn_from_labels_sequence(seq))
+    def __assert_valid(self, *seq, strict):
+        assert self.__is_valid_fqdn_from_labels_sequence(seq, strict=strict) is True
 
-    def __is_valid_fqdn_from_labels_sequence(self, fqdn_labels_sequence):
+    def __is_valid_fqdn_from_labels_sequence(self, fqdn_labels_sequence, strict):
         fqdn = ".".join(fqdn_labels_sequence)
-        return build_fqdn(fqdn, strict).is_valid
+        return FQDN(fqdn, strict).is_valid
 
 
-class TestAbsoluteFQDN(TestCase):
-    def test_absolute_fqdn(self):
-        self.assertTrue(build_fqdn("trainwreck.com.").is_valid_absolute, strict)
+class TestAbsoluteFQDN:
+    def test_absolute_fqdn(self, strict):
+        assert build_fqdn("trainwreck.com.", strict).is_valid_absolute is True
 
-    def test_absolute_fqdn__fail(self):
-        self.assertFalse(build_fqdn("trainwreck.com").is_valid_absolute, strict)
+    def test_absolute_fqdn__fail(self, strict):
+        assert build_fqdn("trainwreck.com", strict).is_valid_absolute is False
 
-    def test_to_absolute_fqdn_from_relative(self):
-        self.assertEqual(build_fqdn("trainwreck.com").absolute, "trainwreck.com.", strict)
+    def test_to_absolute_fqdn_from_relative(self, strict):
+        assert build_fqdn("trainwreck.com", strict).absolute == "trainwreck.com."
 
-    def test_to_absolute_fqdn_from_absolute(self):
-        self.assertEqual(
-            build_fqdn("absolutetrainwreck.com.", strict).absolute, "absolutetrainwreck.com."
-        )
+    def test_to_absolute_fqdn_from_absolute(self, strict):
+        assert build_fqdn("absolutetrainwreck.com.", strict).absolute == "absolutetrainwreck.com."
 
-    def test_to_absolute_fqdn__raises_ValueError(self):
-        with self.assertRaises(ValueError):
+    def test_to_absolute_fqdn__raises_ValueError(self, strict):
+        with pytest.raises(ValueError):
             build_fqdn("trainwreckcom", strict).absolute
 
-    def test_relative_fqdn_true(self):
+    def test_relative_fqdn_true(self, strict):
         assert build_fqdn("relative.com", strict).is_valid_relative is True
 
-    def test_relative_fqdn_false(self):
+    def test_relative_fqdn_false(self, strict):
         assert build_fqdn("relative.com.", strict).is_valid_relative is False
 
 
-class TestRelativeFQDN(TestCase):
-    def test_relative_fqdn_from_relative(self):
-        self.assertEqual(build_fqdn("trainwreck.com").relative, "trainwreck.com", strict)
+class TestRelativeFQDN:
+    def test_relative_fqdn_from_relative(self, strict):
+        assert build_fqdn("trainwreck.com", strict).relative == "trainwreck.com"
 
-    def test_relative_fqdn_from_absolute(self):
-        self.assertEqual(build_fqdn("trainwreck.com.").relative, "trainwreck.com", strict)
+    def test_relative_fqdn_from_absolute(self, strict):
+        assert build_fqdn("trainwreck.com.", strict).relative == "trainwreck.com"
 
-    def test_relative_fqdn_from_invalid(self):
-        with self.assertRaises(ValueError):
+    def test_relative_fqdn_from_invalid(self, strict):
+        with pytest.raises(ValueError):
             build_fqdn("trainwreck..", strict).relative
 
 
-class TestEquality(TestCase):
-    def test_absolutes_are_equal(self):
-        self.assertEqual(build_fqdn("trainwreck.com."), FQDN("trainwreck.com."), strict)
+class TestEquality:
+    def test_absolutes_are_equal(self, strict):
+        assert build_fqdn("trainwreck.com.", strict) == FQDN("trainwreck.com.")
 
-    def test_relatives_are_equal(self):
-        self.assertEqual(build_fqdn("trainwreck.com"), FQDN("trainwreck.com"), strict)
+    def test_relatives_are_equal(self, strict):
+        assert build_fqdn("trainwreck.com", strict) == FQDN("trainwreck.com")
 
-    def test_mismatch_are_equal(self):
-        self.assertEqual(build_fqdn("trainwreck.com."), FQDN("trainwreck.com"), strict)
+    def test_mismatch_are_equal(self, strict):
+        assert build_fqdn("trainwreck.com.", strict) == FQDN("trainwreck.com")
 
-    def test_equality_is_case_insensitive(self):
-        self.assertEqual(
-            build_fqdn("all-letters-were-created-equal.com.", strict),
-            build_fqdn("ALL-LETTERS-WERE-CREATED-EQUAL.COM.", strict),
-        )
+    def test_equality_is_case_insensitive(self, strict):
+        assert build_fqdn("all-letters-were-created-equal.com.", strict)== build_fqdn("ALL-LETTERS-WERE-CREATED-EQUAL.COM.", strict)
 
 
-class TestHash(TestCase):
-    def test_is_hashable(self):
-        self.assertTrue(hash(build_fqdn("trainwreck.com.")), strict)
+class TestHash:
+    def test_is_hashable(self, strict):
+        assert hash(build_fqdn("trainwreck.com.")), strict is True
 
-    def test_absolutes_are_equal(self):
-        self.assertEqual(hash(build_fqdn("trainwreck.com.")), hash(FQDN("trainwreck.com.")), strict)
+    def test_absolutes_are_equal(self, strict):
+        assert hash(build_fqdn("trainwreck.com.", strict)) == hash(FQDN("trainwreck.com.", strict))
 
-    def test_relatives_are_equal(self):
-        self.assertEqual(hash(build_fqdn("trainwreck.com")), hash(FQDN("trainwreck.com")), strict)
+    def test_relatives_are_equal(self, strict):
+        assert hash(build_fqdn("trainwreck.com", strict)) == hash(FQDN("trainwreck.com", strict))
 
-    def test_mismatch_are_equal(self):
-        self.assertEqual(hash(build_fqdn("trainwreck.com.")), hash(FQDN("trainwreck.com")), strict)
+    def test_mismatch_are_equal(self, strict):
+        assert hash(build_fqdn("trainwreck.com.", strict)) == hash(FQDN("trainwreck.com", strict))
 
-    def test_equality_is_case_insensitive(self):
-        self.assertEqual(
-            hash(build_fqdn("all-letters-were-created-equal.com."), strict),
-            hash(build_fqdn("ALL-LETTERS-WERE-CREATED-EQUAL.COM."), strict),
-        )
+    def test_equality_is_case_insensitive(self, strict):
+        assert hash(build_fqdn("all-letters-were-created-equal.com.", strict)) ==            hash(build_fqdn("ALL-LETTERS-WERE-CREATED-EQUAL.COM.", strict))
 
-    def test_not_equal_to_string(self):
-        self.assertNotEqual(hash(build_fqdn("trainwreck.com.")), hash("trainwreck.com."), strict)
+    def test_not_equal_to_string(self, strict):
+        assert hash(build_fqdn("trainwreck.com.", strict)) != hash("trainwreck.com.")
 
-    def test_different_fqdns_are_not_equal(self):
-        self.assertNotEqual(hash(build_fqdn("trainwreck.com.")), hash(FQDN("test.com.")), strict)
+    def test_different_fqdns_are_not_equal(self, strict):
+        assert hash(build_fqdn("trainwreck.com.")), hash(FQDN("test.com." != strict))
