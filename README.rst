@@ -2,9 +2,23 @@ Fully-Qualified Domain Names
 ===================================
 |Build Status| |Coverage Status| |Latest PyPI Version| |Downloads| |Monthly Downloads|
 
-Validates a fully-qualified domain name (FQDN), in full compliance with
-`RFC 1035 <https://tools.ietf.org/html/rfc1035>`, and the "preferred form" 
-specified in `RFC 3696 section 2 <https://tools.ietf.org/html/rfc3696#section-2>`_.
+Validates a fully-qualified domain name (FQDN), in full compliance with the
+`RFC 1035 s. 2.3.1 <https://tools.ietf.org/html/rfc1035>` "preferred name
+syntax". That form is comprised of alphanumeric ASCII characters as well as
+hyphens, except at the beginning of labels, which are separated by dots in
+human-readable representations.
+
+The preferred name syntax is same as described in other RFCs including:
+- `RFC 1123 s. 2.1 <https://tools.ietf.org/html/rfc1123#section-2>` (authoritative for Internet host names)
+- `RFC 3696 s. 2 <https://tools.ietf.org/html/rfc3696#section-2>` (commentary about domain name validation history)
+
+By contrast, `RFC2181 s. 11 <http://tools.ietf.org/html/rfc2181#section-11>`
+comments that RFC 1035 does not restrict domain names to the preferred name
+syntax set out in `RFC 1035 <http://tools.ietf.org/html/rfc1035>`.
+
+Web browsers like Firefox and Chrome adhere to the preferred name syntax with
+a minor deviation, adding underscores (`_`). See `#14 <https://github.com/ypcrts/fqdn/issues/14>`.
+
 
 Can also convert between absolute and relative FQDNs.
 
