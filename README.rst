@@ -9,7 +9,9 @@ hyphens, except at the beginning of labels, which are separated by dots in
 human-readable representations.
 
 The preferred name syntax is same as described in other RFCs including:
+
 - `RFC 1123 s. 2.1 <https://tools.ietf.org/html/rfc1123#section-2>` (authoritative for Internet host names)
+
 - `RFC 3696 s. 2 <https://tools.ietf.org/html/rfc3696#section-2>` (commentary about domain name validation history)
 
 By contrast, `RFC2181 s. 11 <http://tools.ietf.org/html/rfc2181#section-11>`
