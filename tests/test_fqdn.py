@@ -7,7 +7,7 @@ from fqdn import FQDN
 
 
 def build_fqdn(domain, strict=True):
-    return FQDN(domain, strict)
+    return FQDN(domain, strict=strict)
 
 
 @pytest.fixture(params=(True, False))
@@ -118,7 +118,7 @@ class TestFQDNValidation:
 
     def __is_valid_fqdn_from_labels_sequence(self, fqdn_labels_sequence, strict):
         fqdn = ".".join(fqdn_labels_sequence)
-        return FQDN(fqdn, strict).is_valid
+        return FQDN(fqdn, strict=strict).is_valid
 
 
 class TestAbsoluteFQDN:
@@ -182,7 +182,7 @@ class TestEquality:
         )
 
     def test_strict_and_loose_can_be_equal(self):
-        assert FQDN("trainwreck.com.", True) == FQDN("trainwreck.com", False)
+        assert FQDN("trainwreck.com.", strict=True) == FQDN("trainwreck.com", strict=False)
 
 
 class TestHash:
@@ -191,17 +191,17 @@ class TestHash:
 
     def test_absolutes_are_equal(self, strict):
         assert hash(build_fqdn("trainwreck.com.", strict)) == hash(
-            FQDN("trainwreck.com.", strict)
+            FQDN("trainwreck.com.", strict=strict)
         )
 
     def test_relatives_are_equal(self, strict):
         assert hash(build_fqdn("trainwreck.com", strict)) == hash(
-            FQDN("trainwreck.com", strict)
+            FQDN("trainwreck.com", strict=strict)
         )
 
     def test_mismatch_are_equal(self, strict):
         assert hash(build_fqdn("trainwreck.com.", strict)) == hash(
-            FQDN("trainwreck.com", strict)
+            FQDN("trainwreck.com", strict=strict)
         )
 
     def test_equality_is_case_insensitive(self, strict):
@@ -213,9 +213,9 @@ class TestHash:
         assert hash(build_fqdn("trainwreck.com.", strict)) != hash("trainwreck.com.")
 
     def test_different_fqdns_are_not_equal(self, strict):
-        assert hash(build_fqdn("trainwreck.com.")) == hash(FQDN("test.com." != strict))
+        assert hash(build_fqdn("trainwreck.com.")) != hash(FQDN("test.com."))
 
     def test_strict_and_loose_hashs_are_equal(self):
-        assert hash(FQDN("trainwreck.com.", True)) == hash(
-            FQDN("trainwreck.com", False)
+        assert hash(FQDN("trainwreck.com.", strict=True)) == hash(
+            FQDN("trainwreck.com", strict=False)
         )
