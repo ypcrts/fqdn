@@ -187,7 +187,7 @@ class TestEquality:
 
 class TestHash:
     def test_is_hashable(self, strict):
-        assert hash(build_fqdn("trainwreck.com.")), strict is True
+        assert hash(build_fqdn("trainwreck.com."))
 
     def test_absolutes_are_equal(self, strict):
         assert hash(build_fqdn("trainwreck.com.", strict)) == hash(
@@ -213,7 +213,7 @@ class TestHash:
         assert hash(build_fqdn("trainwreck.com.", strict)) != hash("trainwreck.com.")
 
     def test_different_fqdns_are_not_equal(self, strict):
-        assert hash(build_fqdn("trainwreck.com.")), hash(FQDN("test.com." != strict))
+        assert hash(build_fqdn("trainwreck.com.")) == hash(FQDN("test.com." != strict))
 
     def test_strict_and_loose_hashs_are_equal(self):
         assert hash(FQDN("trainwreck.com.", True)) == hash(FQDN("trainwreck.com", False))

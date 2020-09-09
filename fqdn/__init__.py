@@ -26,23 +26,21 @@ class FQDN:
     length of a label is 63 bytes without the leading length byte.
     """
 
-    STRICT_FQDN_REGEX = re.compile(
-        r"^((?!-)[-A-Z\d]{1,63}(?<!-)\.)+(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$",
-        re.IGNORECASE,
+    STRICT_FQDN_REGEX =(
+        r"^((?!-)[-A-Z\d]{1,63}(?<!-)\.)+(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$"
     )
-    LOOSE_FQDN_REGEX = re.compile(
-        r"^((?![-_])[-_A-Z\d]{1,63}(?<!-)\.)*((?!-)[-A-Z\d]{1,63}(?<!-)\.)(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$",
-        re.IGNORECASE,
+    LOOSE_FQDN_REGEX = (
+        r"^((?![-_])[-_A-Z\d]{1,63}(?<!-)\.)*((?!-)[-A-Z\d]{1,63}(?<!-)\.)(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$"
     )
 
-    def __init__(self, fqdn, strict=True):
+    def __init__(self, fqdn, *, strict=True):
         if not (fqdn and isinstance(fqdn, str)):
             raise ValueError("fqdn must be str")
         self._fqdn = fqdn.lower()
         if strict:
-            self.regex = self.STRICT_FQDN_REGEX
+            self._regex = re.compile(self.STRICT_FQDN_REGEX, re.IGNORECASE)
         else:
-            self.regex = self.LOOSE_FQDN_REGEX
+            self._regex = re.compile(self.LOOSE_FQDN_REGEX, re.IGNORECASE)
 
     def __str__(self):
         """
@@ -69,7 +67,7 @@ class FQDN:
             length -= 1
         if length > 253:
             return False
-        return bool(self.regex.match(self._fqdn))
+        return bool(self._regex.match(self._fqdn))
 
     @cached_property
     def is_valid_absolute(self):
