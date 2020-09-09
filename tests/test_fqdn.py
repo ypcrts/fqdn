@@ -216,4 +216,6 @@ class TestHash:
         assert hash(build_fqdn("trainwreck.com.")) == hash(FQDN("test.com." != strict))
 
     def test_strict_and_loose_hashs_are_equal(self):
-        assert hash(FQDN("trainwreck.com.", True)) == hash(FQDN("trainwreck.com", False))
+        assert hash(FQDN("trainwreck.com.", True)) == hash(
+            FQDN("trainwreck.com", False)
+        )

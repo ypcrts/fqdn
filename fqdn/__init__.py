@@ -26,12 +26,10 @@ class FQDN:
     length of a label is 63 bytes without the leading length byte.
     """
 
-    STRICT_FQDN_REGEX =(
+    STRICT_FQDN_REGEX = (
         r"^((?!-)[-A-Z\d]{1,63}(?<!-)\.)+(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$"
     )
-    LOOSE_FQDN_REGEX = (
-        r"^((?![-_])[-_A-Z\d]{1,63}(?<!-)\.)*((?!-)[-A-Z\d]{1,63}(?<!-)\.)(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$"
-    )
+    LOOSE_FQDN_REGEX = r"^((?![-_])[-_A-Z\d]{1,63}(?<!-)\.)*((?!-)[-A-Z\d]{1,63}(?<!-)\.)(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$"
 
     def __init__(self, fqdn, *, strict=True):
         if not (fqdn and isinstance(fqdn, str)):
