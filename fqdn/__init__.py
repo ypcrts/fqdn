@@ -33,13 +33,16 @@ class FQDN:
 
     # kw-only args for python 3: PEP3102
     if sys.version_info >= (3, 0):
-        def __init__(self, fqdn, *,  min_labels=2):
+
+        def __init__(self, fqdn, *, min_labels=2):
             return self._setup(fqdn, min_labels=min_labels)
+
     else:
+
         def __init__(self, fqdn, **kwargs):
             return self._setup(fqdn, **kwargs)
 
-    def _setup(self, fqdn,  min_labels=2):
+    def _setup(self, fqdn, min_labels=2):
         if not (fqdn and isinstance(fqdn, str)):
             raise ValueError("fqdn must be str")
         self._fqdn = fqdn.lower()
