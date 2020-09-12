@@ -31,10 +31,11 @@ class FQDN:
         re.IGNORECASE,
     )
 
-    def __init__(self, fqdn):
+    def __init__(self, fqdn, *, min_labels=2):
         if not (fqdn and isinstance(fqdn, str)):
             raise ValueError("fqdn must be str")
         self._fqdn = fqdn.lower()
+        self._min_labels = min_labels
 
     def __str__(self):
         """
@@ -61,7 +62,17 @@ class FQDN:
             length -= 1
         if length > 253:
             return False
-        return bool(self.FQDN_REGEX.match(self._fqdn))
+        regex_pass = self.FQDN_REGEX.match(self._fqdn)
+        if not regex_pass:
+            return False
+
+        return self.labels_count >= self._min_labels
+
+    @property
+    def labels_count(self):
+        has_terminal_dot = self._fqdn[-1] == "."
+        count = self._fqdn.count(".") + (0 if has_terminal_dot else 1)
+        return count
 
     @cached_property
     def is_valid_absolute(self):

@@ -119,15 +119,39 @@ class TestFQDNValidation(TestCase):
         return FQDN(fqdn).is_valid
 
 
-    def __assert_invalid(self, *seq):
-        self.assertFalse(self.__is_valid_fqdn_from_labels_sequence(seq))
+class TestMinLabels(TestCase):
+    def test_labels_count(self):
+        assert FQDN("label").labels_count == 1
+        assert FQDN("label.").labels_count == 1
+        assert FQDN("label.babel").labels_count == 2
+        assert FQDN("label.babel.").labels_count == 2
+        assert FQDN(".label.babel.").labels_count == 3
 
-    def __assert_valid(self, *seq):
-        self.assertTrue(self.__is_valid_fqdn_from_labels_sequence(seq))
+    def test_min_labels_defaults_to_require_2(self):
+        dn = FQDN("label")
+        assert dn._min_labels == 2
+        assert dn.labels_count == 1
+        assert not dn.is_valid
 
-    def __is_valid_fqdn_from_labels_sequence(self, fqdn_labels_sequence):
-        fqdn = ".".join(fqdn_labels_sequence)
-        return FQDN(fqdn).is_valid
+    def test_min_labels_valid_set_to_1(self):
+        with self.assertRaises(ValueError):
+            FQDN("", min_labels=1).is_valid
+        assert FQDN("label", min_labels=1).is_valid
+        assert not FQDN(".label", min_labels=1).is_valid
+        assert FQDN("label.babel", min_labels=1).is_valid
+        assert FQDN("label.babel.", min_labels=1).is_valid
+        assert not FQDN(".label.babel", min_labels=1).is_valid
+
+    def test_min_labels_valid_set_to_3(self):
+        assert not FQDN("label", min_labels=3).is_valid
+        assert not FQDN("label.babel", min_labels=3).is_valid
+        assert not FQDN(".babel", min_labels=3).is_valid
+        assert not FQDN("babel.", min_labels=3).is_valid
+        assert not FQDN(".babel.", min_labels=3).is_valid
+        assert not FQDN("label.babel.", min_labels=3).is_valid
+        assert not FQDN(".label.babel.", min_labels=3).is_valid
+        assert FQDN("fable.label.babel.", min_labels=3).is_valid
+        assert FQDN("fable.label.babel", min_labels=3).is_valid
 
 
 class TestAbsoluteFQDN(TestCase):
