@@ -3,17 +3,22 @@ cache:
   pip: true
 script: $CMD
 env: CMD='coverage run --branch --source fqdn -m py.test'
+after_success:
+  - coverage report
+  - coveralls
 jobs:
   include:
     - name: "python-black code formatting check"
       python: 3.8
+      install:
+        - pip install --quiet black
       env: CMD='black --check .'
     - python: 2.7
     - python: 3.5
     - python: 3.6
     - python: 3.7
     - python: 3.8
-      env: CMD='coverage run --branch --source fqdn -m py.test && coverage report && coveralls'
+      env: CMD='coverage run --branch --source fqdn -m py.test'
 install:
-  - pip install --quiet coverage six python-coveralls black
+  - pip install --quiet coverage six python-coveralls
   - pip install .
