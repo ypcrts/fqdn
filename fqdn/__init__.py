@@ -1,4 +1,5 @@
 import re
+import sys
 
 from fqdn._compat import cached_property
 
