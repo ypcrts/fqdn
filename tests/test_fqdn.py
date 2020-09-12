@@ -25,81 +25,133 @@ class TestFQDNValidation(TestCase):
         assert f.absolute == str(f)
 
     def test_rfc_1035_s_2_3_4__label_max_length(self):
-        self.__assert_valid(
-            "www.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.com"
+        self.assertTrue(
+            FQDN(
+                "www.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.com"
+            ).is_valid
         )
-        self.__assert_valid(
-            "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk"
+        self.assertTrue(
+            FQDN(
+                "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk"
+            ).is_valid
         )
 
     def test_rfc_1035_s_2_3_4__label_too_long(self):
-        self.__assert_invalid("A" * 64, "com")
-        self.__assert_invalid("b" * 63, "A" * 64, "com")
-        self.__assert_invalid("com", "b" * 63, "A" * 64)
+        self.__assert_invalid_from_seq("A" * 64, "com")
+        self.__assert_invalid_from_seq("b" * 63, "A" * 64, "com")
+        self.__assert_invalid_from_seq("com", "b" * 63, "A" * 64)
 
     def test_rfc_1035_s_2_3_4__name_too_long_254_octets(self):
         parts = [(chr(ord("A") + i % 26)) for i in range(int(254 / 2) - 1)]
         parts.append("co")
         fqdn = ".".join(parts)
         assert len(fqdn) == 254
-        self.__assert_invalid(fqdn)
+        self.__assert_invalid_from_seq(fqdn)
 
     def test_rfc_1035_s_2_3_4__name_ok_253_octets(self):
         parts = [(chr(ord("A") + i % 26)) for i in range(int(254 / 2))]
         fqdn = ".".join(parts)
         assert len(fqdn) == 253
-        self.__assert_valid(fqdn)
+        self.__assert_valid_from_seq(fqdn)
 
     def test_rfc_1035_s_3_1__trailing_byte(self):
         parts = [(chr(ord("A") + i % 26)) for i in range(int(254 / 2))]
         fqdn = ".".join(parts) + "."
         assert len(fqdn) == 254
-        self.__assert_valid(fqdn)
+        self.__assert_valid_from_seq(fqdn)
 
     def test_rfc_3696_s_2__label_invalid_starts_or_ends_with_hyphen(self):
-        self.__assert_invalid("-a", "com")
-        self.__assert_invalid("a-", "com")
-        self.__assert_invalid("-a-", "com")
-        self.__assert_invalid("a", "-com")
-        self.__assert_invalid("a", "com-")
+        self.__assert_invalid_fwd_and_bkwd_from_seq("-a", "com")
+        self.__assert_invalid_fwd_and_bkwd_from_seq("a-", "com")
+        self.__assert_invalid_fwd_and_bkwd_from_seq("-a-", "com")
 
     def test_rfc_3696_s_2__preferred_form_invalid_chars(self):
         # these should use punycode instead
-        self.__assert_invalid("є", "com")
-        self.__assert_invalid("le-tour-est-joué", "com")
-        self.__assert_invalid("invalid", "cóm")
-        self.__assert_invalid("ich-hätte-gern-ein-Umlaut", "de")
-        self.__assert_invalid("\x01", "com")
-        self.__assert_invalid("x", "\x01\x02\x01")
+        self.__assert_invalid_fwd_and_bkwd_from_seq("є", "com")
+        self.__assert_invalid_fwd_and_bkwd_from_seq("le-tour-est-joué", "com")
+        self.__assert_invalid_fwd_and_bkwd_from_seq("invalid", "cóm")
+        self.__assert_invalid_fwd_and_bkwd_from_seq("ich-hätte-gern-ein-Umlaut", "de")
+        self.__assert_invalid_fwd_and_bkwd_from_seq("\x01", "com")
+        self.__assert_invalid_fwd_and_bkwd_from_seq("x", "\x01\x02\x01")
 
     def test_rfc_3696_s_2__valid(self):
-        self.__assert_valid("shopping", "on", "the" "net")
-        self.__assert_valid("who", "is")
-        self.__assert_valid("bbc", "co", "uk")
-        self.__assert_valid("example", "io")
-        self.__assert_valid("sh4d05-7357", "c00-mm")
+        self.assertTrue(FQDN("net", min_labels=1).is_valid)
+        self.assertTrue(FQDN("who.is").is_valid)
+        self.assertTrue(FQDN("bbc.co.uk").is_valid)
+        self.__assert_valid_fwd_and_bkwd_from_seq("sh4d05-7357", "c00-mm")
 
-    def test_rfc_3696_s_2__tld_must_not_be_all_numeric(self):
-        self.__assert_invalid("www.1")
-        self.__assert_invalid("1.1")
+    def test_rfc_1035_s_2_3_1__label_cannot_have_inital_digit(self):
+        self.__assert_invalid_fwd_and_bkwd_from_seq("www", "1")
+        self.__assert_invalid_fwd_and_bkwd_from_seq("1w", "1")
+        self.__assert_invalid_fwd_and_bkwd_from_seq("1w", "a")
+        self.__assert_invalid_fwd_and_bkwd_from_seq("1w1", "d")
+        self.__assert_invalid_fwd_and_bkwd_from_seq("111", "a")
+        self.__assert_invalid_fwd_and_bkwd_from_seq("www", "1a")
 
-        self.__assert_invalid("111")
-        self.__assert_invalid("www.111")
+    def test_rfc_1035_s_2_3_1__label_can_have_medial_and_terminal_digits(self):
+        self.__assert_valid_fwd_and_bkwd_from_seq("www1", "a")
+        self.__assert_valid_fwd_and_bkwd_from_seq("ww1a", "c")
 
-        self.__assert_valid("1.a1")
+        self.assertTrue(FQDN("w1w", min_labels=1).is_valid)
+        self.assertTrue(FQDN("a11", min_labels=1).is_valid)
+        self.assertTrue(FQDN("a1", min_labels=1).is_valid)
 
-        self.__assert_valid("1.1a")
-        self.__assert_valid("www.1a")
+        self.__assert_valid_fwd_and_bkwd_from_seq("w2w", "c")
+        self.__assert_valid_fwd_and_bkwd_from_seq("a111", "a")
+        self.__assert_valid_fwd_and_bkwd_from_seq("a1c1", "a")
 
-    def __assert_invalid(self, *seq):
-        self.assertFalse(self.__is_valid_fqdn_from_labels_sequence(seq))
+    def __assert_valid_fwd_and_bkwd_from_seq(self, *seq):
+        rseq = reversed(seq)
+        self.__assert_valid_from_seq(*rseq)
 
-    def __assert_valid(self, *seq):
-        self.assertTrue(self.__is_valid_fqdn_from_labels_sequence(seq))
+    def __assert_invalid_fwd_and_bkwd_from_seq(self, *seq):
+        rseq = reversed(seq)
+        self.__assert_invalid_from_seq(*rseq)
 
-    def __is_valid_fqdn_from_labels_sequence(self, fqdn_labels_sequence):
-        fqdn = ".".join(fqdn_labels_sequence)
+    def __assert_invalid_from_seq(self, *seq):
+        self.assertFalse(self.__is_valid_fqdn_from_labels_seq(seq))
+
+    def __assert_valid_from_seq(self, *seq):
+        self.assertTrue(self.__is_valid_fqdn_from_labels_seq(seq))
+
+    def __is_valid_fqdn_from_labels_seq(self, fqdn_labels_seq):
+        fqdn = ".".join(fqdn_labels_seq)
         return FQDN(fqdn).is_valid
+
+
+class TestMinLabels(TestCase):
+    def test_labels_count(self):
+        assert FQDN("label").labels_count == 1
+        assert FQDN("label.").labels_count == 1
+        assert FQDN("label.babel").labels_count == 2
+        assert FQDN("label.babel.").labels_count == 2
+        assert FQDN(".label.babel.").labels_count == 3
+
+    def test_min_labels_defaults_to_require_2(self):
+        dn = FQDN("label")
+        assert dn._min_labels == 2
+        assert dn.labels_count == 1
+        assert not dn.is_valid
+
+    def test_min_labels_valid_set_to_1(self):
+        with self.assertRaises(ValueError):
+            FQDN("", min_labels=1).is_valid
+        assert FQDN("label", min_labels=1).is_valid
+        assert not FQDN(".label", min_labels=1).is_valid
+        assert FQDN("label.babel", min_labels=1).is_valid
+        assert FQDN("label.babel.", min_labels=1).is_valid
+        assert not FQDN(".label.babel", min_labels=1).is_valid
+
+    def test_min_labels_valid_set_to_3(self):
+        assert not FQDN("label", min_labels=3).is_valid
+        assert not FQDN("label.babel", min_labels=3).is_valid
+        assert not FQDN(".babel", min_labels=3).is_valid
+        assert not FQDN("babel.", min_labels=3).is_valid
+        assert not FQDN(".babel.", min_labels=3).is_valid
+        assert not FQDN("label.babel.", min_labels=3).is_valid
+        assert not FQDN(".label.babel.", min_labels=3).is_valid
+        assert FQDN("fable.label.babel.", min_labels=3).is_valid
+        assert FQDN("fable.label.babel", min_labels=3).is_valid
 
 
 class TestAbsoluteFQDN(TestCase):
