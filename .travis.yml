@@ -1,16 +1,19 @@
 language: python
-python:
-  - 2.7
-  - 3.5
-  - 3.6
-  - 3.7
-  - 3.8
+cache:
+  pip: true
+script: $CMD
+env: CMD='coverage run --branch --source fqdn -m py.test'
+jobs:
+  include:
+    - name: "python-black code formatting check"
+      python: 3.8
+      env: CMD='black --check .'
+    - python: 2.7
+    - python: 3.5
+    - python: 3.6
+    - python: 3.7
+    - python: 3.8
+      env: CMD='coverage run --branch --source fqdn -m py.test && coverage report && coveralls'
 install:
+  - pip install --quiet coverage six python-coveralls black
   - pip install .
-before_script:
-  - pip install --quiet coverage six python-coveralls
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install black && black --check .; fi
-script: coverage run --branch --source fqdn -m py.test
-after_success:
-  - coverage report
-  - coveralls
