@@ -12,8 +12,7 @@ irrespective of alphabetic case.
 The preferred name syntax restricts domain names to alphanumeric ASCII
 characters and hypens as follows:
 
-1. Each label can have a maximum of 63 characters separated
-by dots.
+1. Each label can have a maximum of 63 characters separated by dots.
 
 2. The total length of the FQDN cannot exceed a total of 253 bytes, not
    including the implied null label at the end (a single dot in string
