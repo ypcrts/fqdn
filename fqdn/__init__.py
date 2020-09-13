@@ -26,25 +26,36 @@ class FQDN:
     length of a label is 63 bytes without the leading length byte.
     """
 
-    STRICT_FQDN_REGEX = (
-        r"^((?!-)[-A-Z\d]{1,63}(?<!-)\.)+(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$"
+    STRICT_REGEXSTR = (
+        r"^((?![-\d])[-A-Z\d]{1,63}(?<!-)[.])*(?![-\d])[-A-Z\d]{1,63}(?<!-)[.]?$"
     )
-    LOOSE_FQDN_REGEX = r"^((?![-_])[-_A-Z\d]{1,63}(?<!-)\.)*((?!-)[-A-Z\d]{1,63}(?<!-)\.)(?!-)(?=.*[A-Z])([-A-Z\d]{1,63})?(?<!-)\.?$"
+    LOOSE_REGEXSTR = (
+        r"^((?![-\d])[-_A-Z\d]{1,63}(?<!-)[.])*(?![-\d])[-_A-Z\d]{1,63}(?<!-)[.]?$"
+    )
 
-    def __init__(self, fqdn, *, strict=True):
+    def __init__(self, fqdn, *nothing, **kwargs):
+        if nothing:
+            raise ValueError("got extra positional parameter, try kwargs")
+        unknown_kwargs = set(kwargs.keys()) - {"strict", "min_labels"}
+        if unknown_kwargs:
+            raise ValueError("got extra kwargs: {}".format(unknown_kwargs))
+
         if not (fqdn and isinstance(fqdn, str)):
             raise ValueError("fqdn must be str")
         self._fqdn = fqdn.lower()
-        if strict:
-            self._regex = re.compile(self.STRICT_FQDN_REGEX, re.IGNORECASE)
-        else:
-            self._regex = re.compile(self.LOOSE_FQDN_REGEX, re.IGNORECASE)
+        self._strict = kwargs.get("strict", False)
+        self._min_labels = kwargs.get("min_labels", 2)
 
     def __str__(self):
         """
         The FQDN as a string in absolute form
         """
         return self.absolute
+
+    @property
+    def _regex(self):
+        regexstr = FQDN.STRICT_REGEXSTR if self._strict else FQDN.LOOSE_REGEXSTR
+        return re.compile(regexstr, re.IGNORECASE)
 
     @cached_property
     def is_valid(self):
@@ -65,7 +76,17 @@ class FQDN:
             length -= 1
         if length > 253:
             return False
-        return bool(self._regex.match(self._fqdn))
+        regex_pass = self._regex.match(self._fqdn)
+        if not regex_pass:
+            return False
+
+        return self.labels_count >= self._min_labels
+
+    @property
+    def labels_count(self):
+        has_terminal_dot = self._fqdn[-1] == "."
+        count = self._fqdn.count(".") + (0 if has_terminal_dot else 1)
+        return count
 
     @cached_property
     def is_valid_absolute(self):

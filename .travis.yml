@@ -1,16 +1,27 @@
 language: python
-python:
-  - 2.7
-  - 3.5
-  - 3.6
-  - 3.7
-  - 3.8
-install:
-  - pip install .
-before_script:
-  - pip install --quiet coverage six python-coveralls
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.8 ]]; then pip install black && black --check .; fi
-script: coverage run --branch --source fqdn -m py.test
+cache:
+  pip: true
+  directories:
+    - $HOME/.cache/pre-commit
+script: $CMD
+env: CMD='coverage run --branch --source fqdn -m py.test'
 after_success:
   - coverage report
   - coveralls
+jobs:
+  include:
+    - name: "python-black code formatting check"
+      python: 3.8
+      install:
+        - pip install --quiet pre-commit
+      env: CMD='pre-commit run -a --show-diff-on-failure'
+    - python: "2.7.18"
+    - python: 3.5
+    - python: 3.6
+    - python: 3.7
+    - python: 3.8
+    - python: "pypy3"
+      env: CMD='coverage run --branch --source fqdn -m py.test'
+install:
+  - pip install --quiet coverage six python-coveralls
+  - pip install .
