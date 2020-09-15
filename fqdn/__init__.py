@@ -26,21 +26,24 @@ class FQDN:
     length of a label is 63 bytes without the leading length byte.
     """
 
-    FQDN_REGEX = re.compile(
-        r"^((?![-\d])[-A-Z\d]{1,63}(?<!-)[.])*(?![-\d])[-A-Z\d]{1,63}(?<!-)[.]?$",
-        re.IGNORECASE,
+    PREFERRED_NAME_SYNTAX_REGEXSTR = (
+        r"^((?![-\d])[-A-Z\d]{1,63}(?<!-)[.])*(?![-\d])[-A-Z\d]{1,63}(?<!-)[.]?$"
+    )
+    ALLOW_UNDERSCORES_REGEXSTR = (
+        r"^((?![-\d])[-_A-Z\d]{1,63}(?<!-)[.])*(?![-\d])[-_A-Z\d]{1,63}(?<!-)[.]?$"
     )
 
     def __init__(self, fqdn, *nothing, **kwargs):
         if nothing:
             raise ValueError("got extra positional parameter, try kwargs")
-        unknown_kwargs = set(kwargs.keys()) - {"min_labels"}
+        unknown_kwargs = set(kwargs.keys()) - {"allow_underscores", "min_labels"}
         if unknown_kwargs:
             raise ValueError("got extra kwargs: {}".format(unknown_kwargs))
 
         if not (fqdn and isinstance(fqdn, str)):
             raise ValueError("fqdn must be str")
         self._fqdn = fqdn.lower()
+        self._allow_underscores = kwargs.get("allow_underscores", False)
         self._min_labels = kwargs.get("min_labels", 2)
 
     def __str__(self):
@@ -48,6 +51,15 @@ class FQDN:
         The FQDN as a string in absolute form
         """
         return self.absolute
+
+    @property
+    def _regex(self):
+        regexstr = (
+            FQDN.PREFERRED_NAME_SYNTAX_REGEXSTR
+            if not self._allow_underscores
+            else FQDN.ALLOW_UNDERSCORES_REGEXSTR
+        )
+        return re.compile(regexstr, re.IGNORECASE)
 
     @cached_property
     def is_valid(self):
@@ -68,7 +80,7 @@ class FQDN:
             length -= 1
         if length > 253:
             return False
-        regex_pass = self.FQDN_REGEX.match(self._fqdn)
+        regex_pass = self._regex.match(self._fqdn)
         if not regex_pass:
             return False
 
