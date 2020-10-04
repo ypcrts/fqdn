@@ -109,7 +109,7 @@ class TestFQDNValidation:
             "sh4d05-7357", "c00-mm", allow_underscores=a_u
         )
 
-    def test_rfc_1123_s_2_3_1__label_can_have_inital_digit(self, a_u):
+    def test_rfc_1035_s_2_3_1__label_can_have_inital_digit(self, a_u):
         self.__assert_valid_fwd_and_bkwd_from_seq("www", "1", allow_underscores=a_u)
         self.__assert_valid_fwd_and_bkwd_from_seq("1w", "1", allow_underscores=a_u)
         self.__assert_valid_fwd_and_bkwd_from_seq("1w", "a", allow_underscores=a_u)
@@ -117,7 +117,7 @@ class TestFQDNValidation:
         self.__assert_valid_fwd_and_bkwd_from_seq("111", "a", allow_underscores=a_u)
         self.__assert_valid_fwd_and_bkwd_from_seq("www", "1a", allow_underscores=a_u)
 
-    def test_rfc_1123_s_2_3_1__label_can_have_medial_and_terminal_digits(self, a_u):
+    def test_rfc_1123__label_can_have_medial_and_terminal_digits(self, a_u):
         self.__assert_valid_fwd_and_bkwd_from_seq("www1", "a", allow_underscores=a_u)
         self.__assert_valid_fwd_and_bkwd_from_seq("ww1a", "c", allow_underscores=a_u)
 
