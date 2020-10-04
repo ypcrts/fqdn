@@ -5,8 +5,7 @@ setup(
     packages=["fqdn"],
     version="1.4.0",
     description=(
-        "Validate fully-qualified domain names compliant "
-        "to RFC 1035 and the preferred form in RFC 3686 s. 2."
+        "Validate fully-qualified domain names compliant " "to RFC 1035 and the preferred form in RFC 3686 s. 2."
     ),
     author="ypcrts",
     author_email="ypcrts@users.noreply.github.com",
@@ -14,7 +13,7 @@ setup(
     keywords=["fqdn", "domain", "hostname", "RFC3686", "dns"],
     license="MPL 2.0",
     zip_safe=True,
-    install_requires=["cached-property>=1.3.0"],
+    install_requires=["cached-property>=1.3.0;python_version<'3.8'"],
     python_requires=">=2.7, !=3.0, !=3.1, !=3.2, !=3.3, !=3.4, <4",
     test_suite="tests",
     classifiers=[
