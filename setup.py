@@ -5,7 +5,8 @@ setup(
     packages=["fqdn"],
     version="1.4.0",
     description=(
-        "Validate fully-qualified domain names compliant " "to RFC 1035 and the preferred form in RFC 3686 s. 2."
+        "Validate fully-qualified domain names compliant "
+        "to RFC 1035 and the preferred form in RFC 3686 s. 2."
     ),
     author="ypcrts",
     author_email="ypcrts@users.noreply.github.com",

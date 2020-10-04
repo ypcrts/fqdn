@@ -32,7 +32,8 @@ class TestFQDNValidation:
 
     def test_rfc_1035_s_2_3_4__label_max_length(self, a_u):
         assert FQDN(
-            "www.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.com", allow_underscores=a_u,
+            "www.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.com",
+            allow_underscores=a_u,
         ).is_valid
         assert FQDN(
             "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk",
@@ -71,11 +72,21 @@ class TestFQDNValidation:
     def test_rfc_3696_s_2__preferred_form_invalid_chars(self, a_u):
         # these should use punycode instead
         self.__assert_invalid_fwd_and_bkwd_from_seq("є", "com", allow_underscores=a_u)
-        self.__assert_invalid_fwd_and_bkwd_from_seq("le-tour-est-joué", "com", allow_underscores=a_u)
-        self.__assert_invalid_fwd_and_bkwd_from_seq("invalid", "cóm", allow_underscores=a_u)
-        self.__assert_invalid_fwd_and_bkwd_from_seq("ich-hätte-gern-ein-Umlaut", "de", allow_underscores=a_u)
-        self.__assert_invalid_fwd_and_bkwd_from_seq("\x01", "com", allow_underscores=a_u)
-        self.__assert_invalid_fwd_and_bkwd_from_seq("x", "\x01\x02\x01", allow_underscores=a_u)
+        self.__assert_invalid_fwd_and_bkwd_from_seq(
+            "le-tour-est-joué", "com", allow_underscores=a_u
+        )
+        self.__assert_invalid_fwd_and_bkwd_from_seq(
+            "invalid", "cóm", allow_underscores=a_u
+        )
+        self.__assert_invalid_fwd_and_bkwd_from_seq(
+            "ich-hätte-gern-ein-Umlaut", "de", allow_underscores=a_u
+        )
+        self.__assert_invalid_fwd_and_bkwd_from_seq(
+            "\x01", "com", allow_underscores=a_u
+        )
+        self.__assert_invalid_fwd_and_bkwd_from_seq(
+            "x", "\x01\x02\x01", allow_underscores=a_u
+        )
 
     def test_underscores_extra_mode(self):
         self.__assert_valid_fwd_and_bkwd_from_seq("_", "dog", allow_underscores=True)
@@ -83,14 +94,20 @@ class TestFQDNValidation:
         self.__assert_valid_fwd_and_bkwd_from_seq("o_o", "dog", allow_underscores=True)
 
         self.__assert_invalid_fwd_and_bkwd_from_seq("_", "dog", allow_underscores=False)
-        self.__assert_invalid_fwd_and_bkwd_from_seq("i_", "dog", allow_underscores=False)
-        self.__assert_invalid_fwd_and_bkwd_from_seq("o_o", "dog", allow_underscores=False)
+        self.__assert_invalid_fwd_and_bkwd_from_seq(
+            "i_", "dog", allow_underscores=False
+        )
+        self.__assert_invalid_fwd_and_bkwd_from_seq(
+            "o_o", "dog", allow_underscores=False
+        )
 
     def test_rfc_3696_s_2__valid(self):
         assert FQDN("net", min_labels=1, allow_underscores=a_u).is_valid
         assert FQDN("who.is", allow_underscores=a_u).is_valid
         assert FQDN("bbc.co.uk", allow_underscores=a_u).is_valid
-        self.__assert_valid_fwd_and_bkwd_from_seq("sh4d05-7357", "c00-mm", allow_underscores=a_u)
+        self.__assert_valid_fwd_and_bkwd_from_seq(
+            "sh4d05-7357", "c00-mm", allow_underscores=a_u
+        )
 
     def test_rfc_1123_s_2_3_1__label_can_have_inital_digit(self, a_u):
         self.__assert_valid_fwd_and_bkwd_from_seq("www", "1", allow_underscores=a_u)
@@ -170,10 +187,15 @@ class TestAbsoluteFQDN:
         assert FQDN("trainwreck.com", allow_underscores=a_u).is_valid_absolute is False
 
     def test_to_absolute_fqdn_from_relative(self, a_u):
-        assert FQDN("trainwreck.com", allow_underscores=a_u).absolute == "trainwreck.com."
+        assert (
+            FQDN("trainwreck.com", allow_underscores=a_u).absolute == "trainwreck.com."
+        )
 
     def test_to_absolute_fqdn_from_absolute(self, a_u):
-        assert FQDN("absolutetrainwreck.com.", allow_underscores=a_u).absolute == "absolutetrainwreck.com."
+        assert (
+            FQDN("absolutetrainwreck.com.", allow_underscores=a_u).absolute
+            == "absolutetrainwreck.com."
+        )
 
     def test_to_absolute_fqdn__raises_ValueError(self, a_u):
         with pytest.raises(ValueError):
@@ -188,10 +210,14 @@ class TestAbsoluteFQDN:
 
 class TestRelativeFQDN:
     def test_relative_fqdn_from_relative(self, a_u):
-        assert FQDN("trainwreck.com", allow_underscores=a_u).relative == "trainwreck.com"
+        assert (
+            FQDN("trainwreck.com", allow_underscores=a_u).relative == "trainwreck.com"
+        )
 
     def test_relative_fqdn_from_absolute(self, a_u):
-        assert FQDN("trainwreck.com.", allow_underscores=a_u).relative == "trainwreck.com"
+        assert (
+            FQDN("trainwreck.com.", allow_underscores=a_u).relative == "trainwreck.com"
+        )
 
     def test_relative_fqdn_from_invalid(self, a_u):
         with pytest.raises(ValueError):
@@ -200,21 +226,29 @@ class TestRelativeFQDN:
 
 class TestEquality:
     def test_absolutes_are_equal(self, a_u):
-        assert FQDN("trainwreck.com.", allow_underscores=a_u) == FQDN("trainwreck.com.", allow_underscores=a_u)
-
-    def test_relatives_are_equal(self, a_u):
-        assert FQDN("trainwreck.com", allow_underscores=a_u) == FQDN("trainwreck.com", allow_underscores=a_u)
-
-    def test_mismatch_are_equal(self, a_u):
-        assert FQDN("trainwreck.com.", allow_underscores=a_u) == FQDN("trainwreck.com", allow_underscores=a_u)
-
-    def test_equality_is_case_insensitive(self, a_u):
-        assert FQDN("all-letters-were-created-equal.com.", allow_underscores=a_u) == FQDN(
-            "ALL-LETTERS-WERE-CREATED-EQUAL.COM.", allow_underscores=a_u
+        assert FQDN("trainwreck.com.", allow_underscores=a_u) == FQDN(
+            "trainwreck.com.", allow_underscores=a_u
         )
 
+    def test_relatives_are_equal(self, a_u):
+        assert FQDN("trainwreck.com", allow_underscores=a_u) == FQDN(
+            "trainwreck.com", allow_underscores=a_u
+        )
+
+    def test_mismatch_are_equal(self, a_u):
+        assert FQDN("trainwreck.com.", allow_underscores=a_u) == FQDN(
+            "trainwreck.com", allow_underscores=a_u
+        )
+
+    def test_equality_is_case_insensitive(self, a_u):
+        assert FQDN(
+            "all-letters-were-created-equal.com.", allow_underscores=a_u
+        ) == FQDN("ALL-LETTERS-WERE-CREATED-EQUAL.COM.", allow_underscores=a_u)
+
     def test_strict_and_loose_can_be_equal(self):
-        assert FQDN("trainwreck.com.", allow_underscores=False) == FQDN("trainwreck.com", allow_underscores=True)
+        assert FQDN("trainwreck.com.", allow_underscores=False) == FQDN(
+            "trainwreck.com", allow_underscores=True
+        )
 
 
 class TestHash:
@@ -237,12 +271,14 @@ class TestHash:
         )
 
     def test_equality_is_case_insensitive(self, a_u):
-        assert hash(FQDN("all-letters-were-created-equal.com.", allow_underscores=a_u)) == hash(
-            FQDN("ALL-LETTERS-WERE-CREATED-EQUAL.COM.", allow_underscores=a_u)
-        )
+        assert hash(
+            FQDN("all-letters-were-created-equal.com.", allow_underscores=a_u)
+        ) == hash(FQDN("ALL-LETTERS-WERE-CREATED-EQUAL.COM.", allow_underscores=a_u))
 
     def test_not_equal_to_string(self, a_u):
-        assert hash(FQDN("trainwreck.com.", allow_underscores=a_u)) != hash("trainwreck.com.")
+        assert hash(FQDN("trainwreck.com.", allow_underscores=a_u)) != hash(
+            "trainwreck.com."
+        )
 
     def test_different_fqdns_are_not_equal(self, a_u):
         assert hash(FQDN("trainwreck.com.")) != hash(FQDN("test.com."))

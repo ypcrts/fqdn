@@ -26,8 +26,12 @@ class FQDN:
     length of a label is 63 bytes without the leading length byte.
     """
 
-    PREFERRED_NAME_SYNTAX_REGEXSTR = r"^((?![-])[-A-Z\d]{1,63}(?<!-)[.])*(?!-)[-A-Z\d]{1,63}(?<!-)[.]?$"
-    ALLOW_UNDERSCORES_REGEXSTR = r"^((?![-])[-_A-Z\d]{1,63}(?<!-)[.])*(?!-)[-_A-Z\d]{1,63}(?<!-)[.]?$"
+    PREFERRED_NAME_SYNTAX_REGEXSTR = (
+        r"^((?![-])[-A-Z\d]{1,63}(?<!-)[.])*(?!-)[-A-Z\d]{1,63}(?<!-)[.]?$"
+    )
+    ALLOW_UNDERSCORES_REGEXSTR = (
+        r"^((?![-])[-_A-Z\d]{1,63}(?<!-)[.])*(?!-)[-_A-Z\d]{1,63}(?<!-)[.]?$"
+    )
 
     def __init__(self, fqdn, *nothing, **kwargs):
         if nothing:
@@ -51,7 +55,9 @@ class FQDN:
     @property
     def _regex(self):
         regexstr = (
-            FQDN.PREFERRED_NAME_SYNTAX_REGEXSTR if not self._allow_underscores else FQDN.ALLOW_UNDERSCORES_REGEXSTR
+            FQDN.PREFERRED_NAME_SYNTAX_REGEXSTR
+            if not self._allow_underscores
+            else FQDN.ALLOW_UNDERSCORES_REGEXSTR
         )
         return re.compile(regexstr, re.IGNORECASE)
 
