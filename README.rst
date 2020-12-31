@@ -3,7 +3,7 @@ Fully-Qualified Domain Names
 |Build Status| |Coverage Status| |Latest PyPI Version| |Downloads| |Monthly Downloads|
 
 Validates fully-qualified domain names against `RFC 1123
-<https://tools.ietf.org/html/rfc/1123>`_, so that they are acceptable to modern
+<https://tools.ietf.org/html/rfc1123>`_, so that they are acceptable to modern
 browsers
 
 This package can also convert between absolute and relative FQDNs, and test
