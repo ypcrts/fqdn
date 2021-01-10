@@ -32,12 +32,12 @@ Python FQDN Fully-Qualified Domain Names
 |License Status| |Build Status| |Coverage Status| |Latest PyPI Version|
 |Downloads| |Monthly Downloads|
 
-This package validates Fully Qualified Domain Names (FQDNs) conformant to the
+This package validates Fully Qualified Domain Names (FQDNs) conforming to the
 Internet Engineering Task Force specification [#spec]_. The design intent is to
 validate that a string would be traditionally acceptable as a public Internet
-hostname to RFC-conformant software, which is a strict subset of the logic in
+hostname to RFC-conforming software, which is a strict subset of the logic in
 modern web browsers like Mozilla Firefox and Chromium that determines whether
-make a DNS lookup [#letsencrypt]_. Configuration options can relax contraints
+make a DNS lookup [#letsencrypt]_. Configuration options can relax constraints
 so that short hostnames without periods or others with underscores will
 be valid. These relaxations are closer to how modern web browsers work [#browsers]_ .
 
@@ -51,7 +51,7 @@ True
 >>> bbc_fqdn.relative
 'bbc.co.uk'
 
-Equality checks are implemented case insensitive conformant to to the IETF
+Equality checks are implemented case insensitive conforming to to the IETF
 specification [#equality].
 
 >>> FQDN('BBC.CO.UK.') == FQDN('BbC.Co.uK')
@@ -90,7 +90,6 @@ and hyphens as described below.
 
 `RFC 1123 <https://tools.ietf.org/html/rfc1123>`_: Requirements for Internet
 Hosts - Application and Support, October 1989
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
    This RFC is an official specification for the Internet community.  It
    incorporates by reference, amends, corrects, and supplements the
@@ -118,7 +117,6 @@ Hosts - Application and Support, October 1989
 
 `RFC 952 <https://tools.ietf.org/html/rfc952>`_: DoD Internet host table
 specification, October 1985
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   This RFC is the official specification of the format of the Internet Host Table.
 
@@ -134,9 +132,8 @@ Commentary
 
 `RFC-1034 <https://tools.ietf.org/html/rfc1035>`_: Domain Name Concepts and
 Facilities, November 1987
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Section 3.5 specifies a "preferred name syntax", which is non-compulsory.
+- Section 3.5 specifies a "preferred name syntax", which is non-compulsory.
 
   3.5. Preferred name syntax
 
@@ -155,27 +152,24 @@ Section 3.5 specifies a "preferred name syntax", which is non-compulsory.
 
 `RFC-1035 <https://tools.ietf.org/html/rfc1035>`_: Domain Names
 - Implementation and Specification, November 1987
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Section 2.3.1 repeats the "preferred name syntax" proposal from RFC-1034.
+- Section 2.3.1 repeats the "preferred name syntax" proposal from RFC-1034.
 
 `RFC-2181 <https://tools.ietf.org/html/rfc2181>`_: Clarification to the DNS
 Specification, July 1997
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Section 11 comments that RFC-1035 does not restrict domain names to the
-preferred name syntax set out in it. Instead Internet hostnames are
-restricted more or less by a combination of tradition and RFC-2181, where
-this package finds itself.
+- Section 11 comments that RFC-1035 does not restrict domain names to the
+  preferred name syntax set out in it. Instead Internet hostnames are
+  restricted more or less by a combination of tradition and RFC-2181, where
+  this package finds itself.
 
 `RFC-3696 <https://tools.ietf.org/html/rfc3696>`_: Application Techniques for
 Checking and Transformation of Names, February 2004
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This memo provides *fascinating* commentary of the history of string validation
-for domain names.
+- This memo provides *fascinating* commentary of the history of string
+  validation for domain names.
 
 Licenses
-===================================
+================================================================================
 
 |License Status Shield|
