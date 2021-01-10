@@ -65,11 +65,11 @@ True
   of string validation logic to determine validity for issuance. This package
   is not intended to achieve functional parity with CA issuance, because they
   may have proprietary or custom login. `Boulder's code
-  <https://github.com/letsencrypt/boulder/blob/8139c8fe28d873c2f772827be30426d075103002/policy/pa.go#L218>`
+  <https://github.com/letsencrypt/boulder/blob/8139c8fe28d873c2f772827be30426d075103002/policy/pa.go#L218>`_
   is starkly different from Chromium's, as outlined in `Issue #14
-  <https://github.com/ypcrts/fqdn/issues/14#issuecomment-688604160>`.
+  <https://github.com/ypcrts/fqdn/issues/14#issuecomment-688604160>`_.
 .. [#browsers] See `Issue #14
-  <https://github.com/ypcrts/fqdn/issues/14#issuecomment-688604160>`.
+  <https://github.com/ypcrts/fqdn/issues/14#issuecomment-688604160>`_.
 
 
 Standards Conformance
