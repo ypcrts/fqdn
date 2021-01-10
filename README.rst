@@ -76,3 +76,9 @@ This package Google Chrome and Mozilla Firefox adhere only loosely to the
 preferred name syntax with minor deviations, adding underscores (`_`), and
 allowing hyphens to appear at the end of a label, and sometimes also the
 beginning. See `#14 <https://github.com/ypcrts/fqdn/issues/14>`_.
+
+License
+------------------------
+.. raw:: html
+
+    <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Fypcrts%2Ffqdn?ref=badge_large" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Fypcrts%2Ffqdn.svg?type=large"/></a>
