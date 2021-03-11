@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name="fqdn",
     packages=["fqdn"],
-    version="1.5.0",
+    version="1.5.1",
     description=(
         "Validates fully-qualified domain names against RFC 1123, "
         "so that they are acceptable to modern bowsers"
