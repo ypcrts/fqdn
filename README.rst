@@ -4,11 +4,11 @@
 .. |Python Versions| image:: https://img.shields.io/pypi/pyversions/fqdn.svg
    :target: https://pypi.org/project/fqdn/
 
-.. |Build Status| image:: https://travis-ci.org/ypcrts/fqdn.svg?branch=master
-   :target: https://travis-ci.org/ypcrts/fqdn?branch=master
+.. |Build Status| image:: https://github.com/ypcrts/fqdn/actions/workflows/python-package.yml/badge.svg?branch=develop
+   :target: https://github.com/ypcrts/fqdn/actions/workflows/python-package.yml?query=branch%3Adevelop
 
-.. |Coverage Status| image:: https://coveralls.io/repos/github/ypcrts/fqdn/badge.svg?branch=master
-   :target: https://coveralls.io/github/ypcrts/fqdn?branch=master
+.. |Coverage Status| image:: https://codecov.io/gh/ypcrts/fqdn/branch/develop/graph/badge.svg?token=cavArywW2X
+  :target: https://codecov.io/gh/ypcrts/fqdn
 
 .. |Latest PyPI Version| image:: https://img.shields.io/pypi/v/fqdn.svg
    :target: https://pypi.python.org/pypi/fqdn
@@ -30,7 +30,7 @@ Python FQDN Fully-Qualified Domain Names
 ================================================================================
 
 |License Status| |Build Status| |Coverage Status| |Latest PyPI Version|
-|Downloads| |Monthly Downloads|
+|Downloads| |Monthly Downloads| |Python Versions|
 
 This package validates Fully Qualified Domain Names (FQDNs) conforming to the
 Internet Engineering Task Force specification [#spec]_. The design intent is to
