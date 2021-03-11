@@ -4,8 +4,8 @@
 .. |Python Versions| image:: https://img.shields.io/pypi/pyversions/fqdn.svg
    :target: https://pypi.org/project/fqdn/
 
-.. |Build Status| image:: https://github.com/ypcrts/fqdn/actions/workflows/python-package.yml/badge.svg?branch=develop
-   :target: https://github.com/ypcrts/fqdn/actions/workflows/python-package.yml?query=branch%3Adevelop
+.. |Build Status| image:: https://github.com/ypcrts/fqdn/actions/workflows/unit-tests.yml/badge.svg?branch=develop
+   :target: https://github.com/ypcrts/fqdn/actions/workflows/unit-tests.tml?query=branch%3Adevelop
 
 .. |Coverage Status| image:: https://codecov.io/gh/ypcrts/fqdn/branch/develop/graph/badge.svg?token=cavArywW2X
   :target: https://codecov.io/gh/ypcrts/fqdn
