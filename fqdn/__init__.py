@@ -64,7 +64,7 @@ class FQDN:
     @cached_property
     def is_valid(self):
         """
-        True for a validated fully-qualified domain nam (FQDN), in full
+        True for a validated fully-qualified domain name (FQDN), in full
         compliance with RFC 1035, and the "preferred form" specified in RFC
         3686 s. 2, whether relative or absolute.
 
