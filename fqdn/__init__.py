@@ -143,3 +143,38 @@ class FQDN:
 
     def __hash__(self):
         return hash(self.absolute) + hash("fqdn")
+
+
+class Label:
+    """
+    A RFC 1123 label must consist of alphanumeric characters
+    or '-', and must start and end with an alphanumeric character
+    for example 'my-name',  or '123-abc'
+    """
+
+    RFC_1123_LABLE_REGEX = r"[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])?$"
+
+    def __init__(self, label, *nothing, **kwargs):
+        if nothing:
+            raise ValueError("got extra positional parameter, try kwargs")
+        unknown_kwargs = set(kwargs.keys()) - {"label"}
+        if unknown_kwargs:
+            raise ValueError("got extra kwargs: {}".format(unknown_kwargs))
+
+        if not (label and isinstance(label, str) or not label):
+            raise ValueError("label must be str")
+
+        self._label = label.lower()
+
+    @property
+    def _regex(self):
+        return re.compile(self.RFC_1123_LABLE_REGEX)
+
+    @cached_property
+    def is_valid(self):
+        if len(self._label) == 0 or len(self._label) > 63:
+            return False
+        regex_pass = self._regex.match(self._label)
+        if not regex_pass:
+            return False
+        return True
