@@ -6,7 +6,7 @@ setup(
     version="1.5.1",
     description=(
         "Validates fully-qualified domain names against RFC 1123, "
-        "so that they are acceptable to modern bowsers"
+        "so that they are acceptable to modern browsers"
     ),
     author="ypcrts",
     author_email="ypcrts@users.noreply.github.com",
