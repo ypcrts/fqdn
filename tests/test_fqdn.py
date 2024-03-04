@@ -30,6 +30,11 @@ class TestFQDNValidation:
         f = FQDN(d, allow_underscores=a_u)
         assert f.absolute == str(f)
 
+    def test_empty(self, a_u):
+        d = ""
+        f = FQDN(d, allow_underscores=a_u)
+        assert not f.is_valid
+
     def test_rfc_1035_s_2_3_4__label_max_length(self, a_u):
         assert FQDN(
             "www.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.com",
@@ -159,8 +164,7 @@ class TestMinLabels:
         assert not dn.is_valid
 
     def test_min_labels_valid_set_to_1(self):
-        with pytest.raises(ValueError):
-            FQDN("", min_labels=1).is_valid
+        assert not FQDN("", min_labels=1).is_valid
         assert FQDN("label", min_labels=1).is_valid
         assert not FQDN(".label", min_labels=1).is_valid
         assert FQDN("label.babel", min_labels=1).is_valid
