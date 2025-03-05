@@ -2,7 +2,7 @@
 import sys
 
 import pytest
-from fqdn import FQDN
+from fqdn import FQDN, Label
 
 
 @pytest.fixture(params=(True, False))
@@ -287,3 +287,44 @@ class TestHash:
         assert hash(FQDN("trainwreck.com.", allow_underscores=False)) == hash(
             FQDN("trainwreck.com", allow_underscores=True)
         )
+
+
+class TestLabel:
+    @pytest.mark.parametrize(
+        "label",
+        [
+            "test-name",
+            "01010",
+            "abc",
+            "a0c",
+            "a-0c",
+            "a",
+            "0-0",
+            "0--0",
+            "A0c",
+            "A-0c",
+            "012345670123456701234567012345670123456701234567012345670123456",
+        ],
+    )
+    def test_valid_labels(self, label):
+        assert Label(label).is_valid
+
+    @pytest.mark.parametrize(
+        "label",
+        [
+            "0123456701234567012345670123456701234567012345670123456701234567",
+            "o1234567.01234567",
+            "",
+            "   ",
+            "ab cd",
+            "ab..cd",
+            "ab\ncd",
+            "-A0c",
+            "abcd1.",
+            "abcd1-",
+            "ab cd",
+        ],
+    )
+    def test_invalid_labels(self, label):
+        assert not Label(label).is_valid
+        pass
