@@ -168,7 +168,7 @@ class Label:
 
     @property
     def _regex(self):
-        return re.compile(self.RFC_1123_LABLE_REGEX)
+        return re.compile(self.RFC_1123_LABEL_REGEX)
 
     @cached_property
     def is_valid(self):
