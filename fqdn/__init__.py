@@ -152,7 +152,7 @@ class Label:
     for example 'my-name',  or '123-abc'
     """
 
-    RFC_1123_LABLE_REGEX = r"[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])?$"
+    RFC_1123_LABEL_REGEX = r"[a-zA-Z0-9]([-a-zA-Z0-9]*[a-zA-Z0-9])?$"
 
     def __init__(self, label, *nothing, **kwargs):
         if nothing:
