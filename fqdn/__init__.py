@@ -40,7 +40,7 @@ class FQDN:
         if unknown_kwargs:
             raise ValueError("got extra kwargs: {}".format(unknown_kwargs))
 
-        if not (fqdn and isinstance(fqdn, str)):
+        if not isinstance(fqdn, str):
             raise ValueError("fqdn must be str")
         self._fqdn = fqdn.lower()
         self._allow_underscores = kwargs.get("allow_underscores", False)
