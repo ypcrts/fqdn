@@ -48,6 +48,28 @@ True
 True
 ```
 
+## Kubernetes names
+
+Kubernetes validates object names against DNS-1123 formats. `K8sLabel`,
+`K8sSubdomain`, `K8sLabelValue` and `K8sQualifiedName` apply the same rules, so
+a name can be checked before it reaches the API server. Unlike `FQDN`, the
+DNS-1123 labels are case-sensitive and reject uppercase.
+
+```python
+>>> from fqdn import K8sLabel, K8sSubdomain
+>>> K8sLabel('web-1').is_valid
+True
+>>> K8sLabel('Web-1').is_valid
+False
+>>> K8sSubdomain('svc.cluster.local').is_valid
+True
+```
+
+`K8sLabel` covers namespaces, pods and services; `K8sSubdomain` covers services
+and Ingress hosts; `K8sLabelValue` covers label values, which may be empty; and
+`K8sQualifiedName` covers label and annotation keys, which allow an optional
+DNS-1123 subdomain prefix.
+
 ## Notes
 
 - **Certificate authorities.** Certificate authorities like Let's Encrypt run a

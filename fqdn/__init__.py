@@ -143,3 +143,95 @@ class FQDN:
 
     def __hash__(self):
         return hash(self.absolute) + hash("fqdn")
+
+
+class _K8sName:
+    REGEXSTR = r""
+    MAX_LENGTH = 0
+
+    def __init__(self, name):
+        if not isinstance(name, str):
+            raise ValueError("name must be str")
+        self._name = name
+
+    @property
+    def _regex(self):
+        return re.compile(self.REGEXSTR)
+
+    @cached_property
+    def is_valid(self):
+        if len(self._name) > self.MAX_LENGTH:
+            return False
+        return self._regex.match(self._name) is not None
+
+
+class K8sLabel(_K8sName):
+    """
+    A Kubernetes DNS-1123 label, the format required for most object names
+    such as namespaces, pods and services. It is a lowercase alphanumeric
+    string or '-', starts and ends with an alphanumeric character, and is at
+    most 63 characters.
+
+    https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-label-names
+    """
+
+    REGEXSTR = r"[a-z0-9]([-a-z0-9]*[a-z0-9])?\Z"
+    MAX_LENGTH = 63
+
+
+class K8sSubdomain(_K8sName):
+    """
+    A Kubernetes DNS-1123 subdomain, the format required for names such as
+    services and Ingress hosts. It is a period-separated sequence of lowercase
+    alphanumeric characters, '-' or '.', starts and ends with an alphanumeric
+    character, and is at most 253 characters.
+
+    https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names
+    """
+
+    REGEXSTR = r"[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*\Z"
+    MAX_LENGTH = 253
+
+
+class K8sLabelValue(_K8sName):
+    """
+    A Kubernetes label value, which may be empty. It starts and ends with an
+    alphanumeric character, may contain '-', '_' and '.', and is at most 63
+    characters.
+
+    https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set
+    """
+
+    REGEXSTR = r"(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?\Z"
+    MAX_LENGTH = 63
+
+
+class K8sQualifiedName(_K8sName):
+    """
+    A Kubernetes qualified name, the format required for label and annotation
+    keys. It is an optional DNS-1123 subdomain prefix and '/', followed by a
+    name of at most 63 characters that starts and ends with an alphanumeric
+    character and may contain '-', '_' and '.'.
+
+    https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set
+    """
+
+    NAME_REGEXSTR = r"([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]\Z"
+    MAX_NAME_LENGTH = 63
+
+    @property
+    def _name_regex(self):
+        return re.compile(self.NAME_REGEXSTR)
+
+    @cached_property
+    def is_valid(self):
+        parts = self._name.split("/")
+        if len(parts) == 1:
+            name = parts[0]
+        elif len(parts) == 2 and K8sSubdomain(parts[0]).is_valid:
+            name = parts[1]
+        else:
+            return False
+        if not name or len(name) > self.MAX_NAME_LENGTH:
+            return False
+        return self._name_regex.match(name) is not None
