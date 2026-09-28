@@ -1,0 +1,39 @@
+name: Snyk
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+  schedule:
+    - cron: "18 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  snyk:
+    runs-on: ubuntu-latest
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7  # v10.2.0
+
+      - name: Install dependencies
+        run: uv sync --locked --group dev
+
+      - name: Install Snyk CLI
+        uses: snyk/actions/setup@9adf32b1121593767fc3c057af55b55db032dc04  # v1.0.0
+
+      - name: Test for vulnerabilities
+        if: env.SNYK_TOKEN != ''
+        run: snyk test --dev --python --command "uv pip freeze"
+
+      - name: Update Snyk monitor
+        if: github.event_name == 'push' && env.SNYK_TOKEN != ''
+        run: snyk monitor --dev --python --command "uv pip freeze" --project-name=fqdn
