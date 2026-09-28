@@ -21,6 +21,8 @@ tags
 /build
 /*.egg-info
 /.tox
+/.venv
+/.worktrees
 /htmlcov/
 /docs/_build/
 .coverage
