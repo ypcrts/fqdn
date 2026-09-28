@@ -1,6 +1,13 @@
 import re
 
-from fqdn._compat import cached_property
+from fqdn._compat import cached_property, string_types
+
+
+def _to_ascii(fqdn):
+    try:
+        return fqdn.encode("idna").decode("ascii")
+    except UnicodeError:
+        return fqdn
 
 
 class FQDN:
@@ -24,6 +31,10 @@ class FQDN:
     Therefore the max length of a domain name is actually 253 ASCII bytes
     without the trailing null byte or the leading length byte, and the max
     length of a label is 63 bytes without the leading length byte.
+
+    Internationalized domain names in Unicode are converted to their ASCII
+    (IDNA/Punycode) form on construction, so they are validated and rendered
+    against the same ASCII syntax described above.
     """
 
     PREFERRED_NAME_SYNTAX_REGEXSTR = (
@@ -40,9 +51,9 @@ class FQDN:
         if unknown_kwargs:
             raise ValueError("got extra kwargs: {}".format(unknown_kwargs))
 
-        if not (fqdn and isinstance(fqdn, str)):
+        if not (fqdn and isinstance(fqdn, string_types)):
             raise ValueError("fqdn must be str")
-        self._fqdn = fqdn.lower()
+        self._fqdn = _to_ascii(fqdn).lower()
         self._allow_underscores = kwargs.get("allow_underscores", False)
         self._min_labels = kwargs.get("min_labels", 2)
 
