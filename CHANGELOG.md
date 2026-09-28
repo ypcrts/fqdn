@@ -6,8 +6,23 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-09-28
+
+### Changed
+
+- **Breaking:** `FQDN` now accepts Unicode input that it previously rejected as
+  invalid, encoding it to ASCII (IDNA/Punycode) before validation. A non-ASCII
+  hostname whose `is_valid` was `False` may now pass, and `absolute`,
+  `relative` and `str()` return its Punycode form instead of raising.
+  Applications that relied on non-ASCII hostnames being rejected — for example
+  to enforce an ASCII-only or anti-homograph policy — must apply their own
+  check to the input before constructing an `FQDN`. ASCII input is unaffected.
+
 ### Added
 
+- IDN support: Unicode domain names are encoded to their ASCII (IDNA/Punycode)
+  form in the constructor, so names such as `Bücher.example` validate and
+  render as `xn--bcher-kva.example.` (#12, #25).
 - `K8sLabel`, `K8sSubdomain`, `K8sLabelValue` and `K8sQualifiedName` validators
   for the DNS-1123 names, label values and qualified names Kubernetes enforces.
 
