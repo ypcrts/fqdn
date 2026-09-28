@@ -51,9 +51,9 @@ True
 ## Kubernetes names
 
 Kubernetes validates object names against DNS-1123 formats. `K8sLabel`,
-`K8sSubdomain`, `K8sLabelValue` and `K8sQualifiedName` apply the same rules, so
-a name can be checked before it reaches the API server. Unlike `FQDN`, the
-DNS-1123 labels are case-sensitive and reject uppercase.
+`K8sSubdomain`, `K8sLabelValue` and `K8sQualifiedName` mirror the functions the
+API server calls, so a name can be checked before it is submitted. Unlike
+`FQDN`, the DNS-1123 labels are case-sensitive and reject uppercase.
 
 ```python
 >>> from fqdn import K8sLabel, K8sSubdomain
@@ -65,10 +65,31 @@ False
 True
 ```
 
-`K8sLabel` covers namespaces, pods and services; `K8sSubdomain` covers services
-and Ingress hosts; `K8sLabelValue` covers label values, which may be empty; and
-`K8sQualifiedName` covers label and annotation keys, which allow an optional
-DNS-1123 subdomain prefix.
+Each class matches a function in
+[`k8s.io/apimachinery/pkg/util/validation`](https://github.com/kubernetes/apimachinery/blob/master/pkg/util/validation/validation.go),
+the package the API server validates names with:
+
+| Class | Kubernetes function | Example |
+| --- | --- | --- |
+| `K8sLabel` | `IsDNS1123Label` | Namespace and StatefulSet names |
+| `K8sSubdomain` | `IsDNS1123Subdomain` | Pod and Deployment names |
+| `K8sLabelValue` | `IsValidLabelValue` | `metadata.labels` values |
+| `K8sQualifiedName` | `IsQualifiedName` | label and annotation keys |
+
+The rules come from the Kubernetes [Object
+Names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/)
+documentation and the labels [syntax and character
+set](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set),
+which cite [RFC 1123](https://tools.ietf.org/html/rfc1123) and [RFC
+1035](https://tools.ietf.org/html/rfc1035). Two details are worth knowing:
+
+- `IsDNS1123Label` accepts a leading digit. The names documentation currently
+  says RFC 1123 labels must start with an alphabetic character, but the
+  implementation has always matched `[a-z0-9]`; `K8sLabel` follows the
+  implementation.
+- Service names use the stricter RFC 1035 label form and are therefore out of
+  scope. The `RelaxedServiceNameValidation` feature gate switches newly created
+  Services to `IsDNS1123Label`.
 
 ## Notes
 

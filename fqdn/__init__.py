@@ -146,6 +146,12 @@ class FQDN:
 
 
 class _K8sName:
+    """
+    Shared behavior for the Kubernetes name validators. The formats and limits
+    mirror k8s.io/apimachinery/pkg/util/validation, the package the Kubernetes
+    API server validates names with.
+    """
+
     REGEXSTR = r""
     MAX_LENGTH = 0
 
@@ -167,10 +173,14 @@ class _K8sName:
 
 class K8sLabel(_K8sName):
     """
-    A Kubernetes DNS-1123 label, the format required for most object names
-    such as namespaces, pods and services. It is a lowercase alphanumeric
-    string or '-', starts and ends with an alphanumeric character, and is at
-    most 63 characters.
+    A Kubernetes DNS-1123 label, the format `IsDNS1123Label` accepts for
+    Namespace and StatefulSet names. It is a lowercase alphanumeric string or
+    '-', starts and ends with an alphanumeric character, and is at most 63
+    characters.
+
+    The Kubernetes names documentation says RFC 1123 labels must start with an
+    alphabetic character, but the implementation has always accepted a leading
+    digit; this class follows the implementation.
 
     https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-label-names
     """
@@ -181,10 +191,11 @@ class K8sLabel(_K8sName):
 
 class K8sSubdomain(_K8sName):
     """
-    A Kubernetes DNS-1123 subdomain, the format required for names such as
-    services and Ingress hosts. It is a period-separated sequence of lowercase
-    alphanumeric characters, '-' or '.', starts and ends with an alphanumeric
-    character, and is at most 253 characters.
+    A Kubernetes DNS-1123 subdomain, the format `IsDNS1123Subdomain` accepts
+    for most object names, such as Pods and Deployments. It is a
+    period-separated sequence of lowercase alphanumeric characters, '-' or '.',
+    starts and ends with an alphanumeric character, and is at most 253
+    characters.
 
     https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns-subdomain-names
     """
@@ -195,7 +206,8 @@ class K8sSubdomain(_K8sName):
 
 class K8sLabelValue(_K8sName):
     """
-    A Kubernetes label value, which may be empty. It starts and ends with an
+    A Kubernetes label value, the format `IsValidLabelValue` accepts for
+    `metadata.labels` values. It may be empty, starts and ends with an
     alphanumeric character, may contain '-', '_' and '.', and is at most 63
     characters.
 
@@ -208,10 +220,10 @@ class K8sLabelValue(_K8sName):
 
 class K8sQualifiedName(_K8sName):
     """
-    A Kubernetes qualified name, the format required for label and annotation
-    keys. It is an optional DNS-1123 subdomain prefix and '/', followed by a
-    name of at most 63 characters that starts and ends with an alphanumeric
-    character and may contain '-', '_' and '.'.
+    A Kubernetes qualified name, the format `IsQualifiedName` accepts for
+    label and annotation keys. It is an optional DNS-1123 subdomain prefix and
+    '/', followed by a name of at most 63 characters that starts and ends with
+    an alphanumeric character and may contain '-', '_' and '.'.
 
     https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set
     """
