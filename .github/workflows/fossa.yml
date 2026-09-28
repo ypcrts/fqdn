@@ -1,0 +1,28 @@
+name: FOSSA
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+  schedule:
+    - cron: "52 7 * * 2"
+
+permissions:
+  contents: read
+
+jobs:
+  fossa:
+    runs-on: ubuntu-latest
+    env:
+      FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Run FOSSA analysis
+        if: env.FOSSA_API_KEY != ''
+        uses: fossa-contrib/fossa-action@d28f0c947e7406706981a62a91ecc009bcc39fd7  # v4.0.0
+        with:
+          fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
