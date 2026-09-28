@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-09-28
+
 ### Added
 
 - `fqdn/__init__.pyi` type stubs and a `py.typed` marker, so type checkers
