@@ -2,6 +2,7 @@
 import sys
 
 import pytest
+
 from fqdn import FQDN
 
 
