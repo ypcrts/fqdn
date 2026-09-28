@@ -1,0 +1,20 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["security:only-security-updates"],
+  "minimumReleaseAge": "7 days",
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "One pull request for all GitHub Actions bumps",
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions"
+    },
+    {
+      "description": "One pull request for all Python dependency bumps",
+      "matchCategories": ["python"],
+      "groupName": "Python dependencies"
+    }
+  ]
+}
