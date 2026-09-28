@@ -6,6 +6,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- `K8sLabel`, `K8sSubdomain`, `K8sLabelValue` and `K8sQualifiedName` validators
+  for the DNS-1123 names, label values and qualified names Kubernetes enforces.
+
 ## [1.6.0] - 2026-09-28
 
 ### Added
