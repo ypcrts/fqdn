@@ -24,16 +24,33 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7  # v10.2.0
 
-      - name: Install dependencies
-        run: uv sync --locked --group dev
-
       - name: Install Snyk CLI
         uses: snyk/actions/setup@9adf32b1121593767fc3c057af55b55db032dc04  # v1.0.0
 
+      # Snyk's native uv support is Enterprise-only, so the locked set is
+      # exported to a pinned requirements file and scanned with Snyk's pip
+      # support. Snyk builds the tree from an installed environment, so the
+      # export is installed into a pip virtualenv first.
+      - name: Export the locked dependency set
+        run: >-
+          uv export --locked --no-emit-project --no-hashes
+          --format requirements-txt > requirements.txt
+
+      - name: Install the locked set into a pip environment
+        run: |
+          python -m venv .snyk-venv
+          .snyk-venv/bin/python -m pip install --upgrade pip
+          .snyk-venv/bin/python -m pip install -r requirements.txt
+
       - name: Test for vulnerabilities
         if: env.SNYK_TOKEN != ''
-        run: snyk test --dev --python --command "uv pip freeze"
+        run: >-
+          snyk test --file=requirements.txt
+          --command="$GITHUB_WORKSPACE/.snyk-venv/bin/python"
 
       - name: Update Snyk monitor
         if: github.event_name == 'push' && env.SNYK_TOKEN != ''
-        run: snyk monitor --dev --python --command "uv pip freeze" --project-name=fqdn
+        run: >-
+          snyk monitor --file=requirements.txt
+          --command="$GITHUB_WORKSPACE/.snyk-venv/bin/python"
+          --project-name=fqdn
