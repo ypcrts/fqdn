@@ -27,20 +27,19 @@ jobs:
       - name: Install Snyk CLI
         uses: snyk/actions/setup@9adf32b1121593767fc3c057af55b55db032dc04  # v1.0.0
 
-      # Snyk's native uv support is Enterprise-only, so the locked set is
-      # exported to a pinned requirements file and scanned with Snyk's pip
-      # support. Snyk builds the tree from an installed environment, so the
-      # export is installed into a pip virtualenv first.
-      - name: Export the locked dependency set
-        run: >-
-          uv export --locked --no-emit-project --no-hashes
-          --format requirements-txt > requirements.txt
-
+      # Snyk's native uv support is Enterprise-only. Its pip support wants an
+      # installed environment and a requirements file it can resolve against
+      # that environment, so the locked set is installed into a pip virtualenv
+      # and frozen back out. The freeze strips the environment markers that
+      # `uv export` emits, which otherwise name packages (Windows-only, PyPy-
+      # only) that are not installed on the runner.
       - name: Install the locked set into a pip environment
         run: |
+          uv export --locked --no-emit-project --no-hashes --format requirements-txt > requirements.txt
           python -m venv .snyk-venv
           .snyk-venv/bin/python -m pip install --upgrade pip
           .snyk-venv/bin/python -m pip install -r requirements.txt
+          .snyk-venv/bin/python -m pip freeze | grep -viE '^(pip|setuptools|wheel)==' > requirements.txt
 
       - name: Test for vulnerabilities
         if: env.SNYK_TOKEN != ''
