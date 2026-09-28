@@ -9,19 +9,10 @@
 
 ## Reporting a Vulnerability
 
-```
------BEGIN PGP PUBLIC KEY BLOCK-----
-Version: ProtonMail
+Report suspected vulnerabilities privately through GitHub's advisory form:
 
-xjMEXNwsIBYJKwYBBAHaRw8BAQdAk7puaOBaYyC3xqqJAI3Fae6+X+VQJE61
-IIbZXu5OOP/NLXlwY3J0c0Bwcm90b25tYWlsLmNvbSA8eXBjcnRzQHByb3Rv
-bm1haWwuY29tPsJ3BBAWCgAfBQJc3CwgBgsJBwgDAgQVCAoCAxYCAQIZAQIb
-AwIeAQAKCRCCFGL0zzqppZnNAP0XFd2uhApReRTyruW9gCTJzMgRRVeupuc3
-4HmNgdQYdgEA+A51ncDSVHqUK9+N6jPnzCpPd+DoB41drHzvRJlYHA7OOARc
-3CwgEgorBgEEAZdVAQUBAQdAyq94ceRhLSmv5NLPjUwyboABh4Lir8Z6NYBk
-/Q48IDoDAQgHwmEEGBYIAAkFAlzcLCACGwwACgkQghRi9M86qaViZAEAiq2k
-n0VldzrKmX8QVi97tVlFOS9O6EJW4J++p3LrVusBANEvsK98PVlXDciH6bsC
-OTNqi7X/RU7YUImpYl0D4soJ
-=+kNb
------END PGP PUBLIC KEY BLOCK-----
-```
+<https://github.com/ypcrts/fqdn/security/advisories/new>
+
+That opens a draft security advisory visible only to the maintainers. Please
+include the fqdn version, the input that triggers the issue, and the impact you
+expect. Do not open a public issue for a security report.
