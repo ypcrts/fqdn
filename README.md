@@ -48,6 +48,18 @@ True
 True
 ```
 
+Internationalized domain names (IDNs) are converted to their ASCII
+(IDNA/Punycode) form, so they validate and render like any other FQDN:
+
+```python
+>>> from fqdn import FQDN
+>>> idn = FQDN('Bücher.example')
+>>> idn.is_valid
+True
+>>> idn.absolute
+'xn--bcher-kva.example.'
+```
+
 ## Kubernetes names
 
 Kubernetes validates object names against DNS-1123 formats. `K8sLabel`,
@@ -102,6 +114,10 @@ which cite [RFC 1123](https://tools.ietf.org/html/rfc1123) and [RFC
   [issue #14](https://github.com/ypcrts/fqdn/issues/14#issuecomment-688604160).
 - **Browsers.** See
   [issue #14](https://github.com/ypcrts/fqdn/issues/14#issuecomment-688604160).
+- **Internationalized domain names.** Unicode input is encoded with the
+  standard library `idna` codec, which implements IDNA2003. Browsers apply the
+  newer UTS #46 / IDNA2008 rules, which differ for characters such as `ß`
+  (`straße.de` becomes `strasse.de` here, but `xn--strae-oqa.de` in a browser).
 
 ## Standards Conformance
 

@@ -71,17 +71,6 @@ class TestFQDNValidation:
         self.__assert_invalid_fwd_and_bkwd_from_seq("-a-", "com", allow_underscores=a_u)
 
     def test_rfc_3696_s_2__preferred_form_invalid_chars(self, a_u):
-        # these should use punycode instead
-        self.__assert_invalid_fwd_and_bkwd_from_seq("є", "com", allow_underscores=a_u)
-        self.__assert_invalid_fwd_and_bkwd_from_seq(
-            "le-tour-est-joué", "com", allow_underscores=a_u
-        )
-        self.__assert_invalid_fwd_and_bkwd_from_seq(
-            "invalid", "cóm", allow_underscores=a_u
-        )
-        self.__assert_invalid_fwd_and_bkwd_from_seq(
-            "ich-hätte-gern-ein-Umlaut", "de", allow_underscores=a_u
-        )
         self.__assert_invalid_fwd_and_bkwd_from_seq(
             "\x01", "com", allow_underscores=a_u
         )
@@ -143,6 +132,68 @@ class TestFQDNValidation:
     def __is_valid_fqdn_from_labels_seq(self, fqdn_labels_seq, **kwargs):
         fqdn = ".".join(fqdn_labels_seq)
         return FQDN(fqdn, **kwargs).is_valid
+
+
+class TestInternationalizedDomainNames:
+    @pytest.mark.parametrize(
+        "domain",
+        [
+            "Bücher.example",
+            "є.com",
+            "le-tour-est-joué.com",
+            "invalid.cóm",
+            "ich-hätte-gern-ein-Umlaut.de",
+            "☃.com",
+        ],
+    )
+    def test_unicode_domains_are_valid(self, domain, a_u):
+        assert FQDN(domain, allow_underscores=a_u).is_valid
+
+    def test_unicode_is_encoded_as_punycode(self, a_u):
+        f = FQDN("Bücher.example", allow_underscores=a_u)
+        assert f.absolute == "xn--bcher-kva.example."
+        assert f.relative == "xn--bcher-kva.example"
+        assert str(f) == "xn--bcher-kva.example."
+
+    def test_punycode_input_is_unchanged(self, a_u):
+        assert (
+            FQDN("xn--bcher-kva.example", allow_underscores=a_u).relative
+            == "xn--bcher-kva.example"
+        )
+
+    def test_unicode_and_punycode_are_equal(self, a_u):
+        assert FQDN("Bücher.example", allow_underscores=a_u) == FQDN(
+            "xn--bcher-kva.example", allow_underscores=a_u
+        )
+
+    def test_unicode_and_punycode_hash_equal(self, a_u):
+        assert hash(FQDN("Bücher.example", allow_underscores=a_u)) == hash(
+            FQDN("xn--bcher-kva.example", allow_underscores=a_u)
+        )
+
+    def test_equality_is_case_insensitive_for_unicode(self, a_u):
+        assert FQDN("BÜCHER.EXAMPLE", allow_underscores=a_u) == FQDN(
+            "bücher.example", allow_underscores=a_u
+        )
+
+    def test_unicode_absolute_fqdn(self, a_u):
+        f = FQDN("Bücher.example.", allow_underscores=a_u)
+        assert f.is_valid_absolute
+        assert f.absolute == "xn--bcher-kva.example."
+
+    def test_labels_count_on_encoded_form(self, a_u):
+        assert FQDN("Bücher.example", allow_underscores=a_u).labels_count == 2
+
+    def test_min_labels_with_unicode(self):
+        assert FQDN("bücher", min_labels=1).is_valid
+        assert not FQDN("bücher", min_labels=2).is_valid
+
+    def test_idna2003_maps_sharp_s(self, a_u):
+        assert FQDN("straße.de", allow_underscores=a_u).absolute == "strasse.de."
+
+    def test_control_characters_remain_invalid(self, a_u):
+        assert not FQDN("\x01.com", allow_underscores=a_u).is_valid
+        assert not FQDN("x.\x01\x02\x01", allow_underscores=a_u).is_valid
 
 
 class TestMinLabels:
