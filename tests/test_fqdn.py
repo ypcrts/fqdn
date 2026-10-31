@@ -288,3 +288,15 @@ class TestHash:
         assert hash(FQDN("trainwreck.com.", allow_underscores=False)) == hash(
             FQDN("trainwreck.com", allow_underscores=True)
         )
+
+
+@pytest.mark.parametrize("name", ["example.com\n", "example.com.\n"])
+def test_trailing_newline_is_invalid(name, a_u):
+    domain = FQDN(name, allow_underscores=a_u)
+    assert not domain.is_valid
+    assert not domain.is_valid_absolute
+    assert not domain.is_valid_relative
+    with pytest.raises(ValueError, match="invalid FQDN"):
+        domain.absolute
+    with pytest.raises(ValueError, match="invalid FQDN"):
+        domain.relative

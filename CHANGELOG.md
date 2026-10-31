@@ -6,6 +6,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- Reject FQDNs ending in a newline instead of treating them as valid names.
+
 ### Added
 
 - `K8sLabel`, `K8sSubdomain`, `K8sLabelValue` and `K8sQualifiedName` validators
